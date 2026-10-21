@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Atlas X — Agence web, IA & automatisation</title>
+  <meta name="description" content="Atlas X met votre entreprise en orbite : sites vitrines, SEO, GEO, SEA, SMA, agents IA, automatisations et modules sur mesure pour artisans, TPE et PME.">
+  <meta name="theme-color" content="#04050a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f6fb" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Aperçu de partage (WhatsApp, LinkedIn, iMessage…) -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Atlas X">
+  <meta property="og:title" content="Atlas X — Mettez votre entreprise en orbite">
+  <meta property="og:description" content="Web, acquisition, agents IA et automatisations pour artisans, TPE et PME. Cinq offres en orbite : le système ASTRA.">
+  <meta property="og:url" content="https://meta-h777.github.io/atlas-x/">
+  <meta property="og:image" content="https://meta-h777.github.io/atlas-x/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Atlas X, agence web, IA et automatisation">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Atlas X — Mettez votre entreprise en orbite">
+  <meta name="twitter:description" content="Web, acquisition, agents IA et automatisations pour artisans, TPE et PME.">
+  <meta name="twitter:image" content="https://meta-h777.github.io/atlas-x/og.png">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script>
+    // Thème appliqué avant le rendu pour éviter le flash (sombre par défaut)
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem('atlasx-theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <a href="#top" class="brand" aria-label="Atlas X, accueil">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(45 16 16)" />
+        <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-45 16 16)" />
+        <circle cx="16" cy="16" r="3.2" class="core" />
+      </svg>
+      <span class="brand-word">ATLAS<b>X</b></span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="#systeme">Système</a>
+      <a href="#talos">En action</a>
+      <a href="#vol">Plan de vol</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Changer de thème">
+        <svg class="ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      </button>
+      <a href="#contact" class="btn btn-sm btn-primary magnetic">Décoller</a>
+      <button class="burger" id="burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="#systeme">Le système</a>
+    <a href="#talos">En action</a>
+    <a href="#vol">Plan de vol</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact" class="btn btn-primary">Lancer la mission</a>
+  </div>
+
+  <main id="top">
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow"><span class="dot"></span>Agence web · IA · Automatisation</p>
+        <h1 class="hero-title">
+          <span class="line"><span>Mettez votre</span></span>
+          <span class="line"><span>entreprise</span></span>
+          <span class="line"><span class="grad">en orbite.</span></span>
+        </h1>
+        <p class="hero-sub">Sites, acquisition, agents IA et automatisations pour artisans, TPE et PME. Cinq offres qui gravitent autour d'un seul centre de gravité&nbsp;: <strong>votre croissance</strong>.</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary magnetic">Lancer la mission <span class="arrow">→</span></a>
+          <a href="#systeme" class="btn btn-ghost">Explorer le système</a>
+        </div>
+        <ul class="hero-meta">
+          <li><span class="mono">05</span> offres en orbite</li>
+          <li><span class="mono">24/7</span> agents IA</li>
+          <li><span class="mono">FR</span> artisans · TPE · PME</li>
+        </ul>
+      </div>
+
+      <div class="orbit" id="orbit" aria-label="Le système ASTRA : cinq offres en orbite autour d'Atlas X">
+        <svg class="orbit-paths" viewBox="0 0 600 600" aria-hidden="true">
+          <defs>
+            <linearGradient id="og" x1="0" x2="1">
+              <stop offset="0" stop-color="var(--cyan)" stop-opacity=".0"/>
+              <stop offset=".5" stop-color="var(--violet)" stop-opacity=".9"/>
+              <stop offset="1" stop-color="var(--magenta)" stop-opacity=".0"/>
+            </linearGradient>
+          </defs>
+          <g id="orbitRings"></g>
+        </svg>
+        <div class="core-wrap" aria-hidden="true">
+          <div class="core-glow"></div>
+          <div class="core">
+            <svg viewBox="0 0 32 32">
+              <ellipse cx="16" cy="16" rx="13" ry="4.5" transform="rotate(45 16 16)" />
+              <ellipse cx="16" cy="16" rx="13" ry="4.5" transform="rotate(-45 16 16)" />
+            </svg>
+            <span>ATLAS X</span>
+          </div>
+        </div>
+        <a class="sat" href="#apogee" data-i="0" style="--c:var(--cyan)"><b>A</b>Apogée</a>
+        <a class="sat" href="#signal" data-i="1" style="--c:var(--violet)"><b>S</b>Signal</a>
+        <a class="sat" href="#talos-card" data-i="2" style="--c:var(--magenta)"><b>T</b>Talos</a>
+        <a class="sat" href="#relais" data-i="3" style="--c:var(--gold)"><b>R</b>Relais</a>
+        <a class="sat" href="#astrolabe" data-i="4" style="--c:var(--cyan)"><b>A</b>Astrolabe</a>
+      </div>
+
+      <a href="#systeme" class="scroll-cue" aria-label="Défiler vers le système">
+        <span></span>
+      </a>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Site vitrine</span><i>✦</i><span>SEO</span><i>✦</i><span>GEO</span><i>✦</i><span>SEA</span><i>✦</i><span>SMA</span><i>✦</i><span>Agents IA</span><i>✦</i><span>Automatisations</span><i>✦</i><span>Devis en ligne</span><i>✦</i><span>Réservation</span><i>✦</i><span>Facturation</span><i>✦</i>
+        <span>Site vitrine</span><i>✦</i><span>SEO</span><i>✦</i><span>GEO</span><i>✦</i><span>SEA</span><i>✦</i><span>SMA</span><i>✦</i><span>Agents IA</span><i>✦</i><span>Automatisations</span><i>✦</i><span>Devis en ligne</span><i>✦</i><span>Réservation</span><i>✦</i><span>Facturation</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ============ SYSTÈME ASTRA ============ -->
+    <section class="section" id="systeme">
+      <header class="section-head reveal">
+        <p class="kicker mono">// 01 — Le système ASTRA</p>
+        <h2>Un noyau.<br><span class="grad">Cinq orbites.</span></h2>
+        <p class="lead">Comme un écosystème de fusées, de satellites et de robots, chaque offre Atlas X gravite autour d'un objectif unique&nbsp;: faire décoller votre activité. Cinq orbites, une initiale chacune.</p>
+        <div class="acronym" aria-label="A, S, T, R, A">
+          <span style="--c:var(--cyan)">A</span><span style="--c:var(--violet)">S</span><span style="--c:var(--magenta)">T</span><span style="--c:var(--gold)">R</span><span style="--c:var(--cyan)">A</span>
+        </div>
+      </header>
+
+      <div class="cards">
+        <article class="card reveal" id="apogee" style="--c:var(--cyan)">
+          <div class="card-top">
+            <span class="card-letter">A</span>
+            <span class="tag mono">Web</span>
+          </div>
+          <h3>Apogée</h3>
+          <p class="card-sub">Sites vitrines</p>
+          <p>Le point le plus haut de l'orbite. Un site rapide, beau et pensé pour transformer vos visiteurs en clients.</p>
+          <ul>
+            <li>Site one page ou multi-pages</li>
+            <li>Design sur mesure, pensé mobile d'abord</li>
+            <li>Nom de domaine, hébergement, maintenance</li>
+            <li>Vitesse et accessibilité au top</li>
+          </ul>
+        </article>
+
+        <article class="card reveal" id="signal" style="--c:var(--violet)">
+          <div class="card-top">
+            <span class="card-letter">S</span>
+            <span class="tag mono">Acquisition</span>
+          </div>
+          <h3>Signal</h3>
+          <p class="card-sub">SEO · GEO · SEA · SMA</p>
+          <p>Être trouvé partout où vos clients cherchent, sur Google comme dans les réponses des IA.</p>
+          <ul>
+            <li><b>SEO</b> — remonter sur Google, en local</li>
+            <li><b>GEO</b> — être cité par ChatGPT, Gemini, Perplexity</li>
+            <li><b>SEA</b> — campagnes Google Ads rentables</li>
+            <li><b>SMA</b> — publicité Instagram, Facebook, TikTok</li>
+          </ul>
+        </article>
+
+        <article class="card card-wide reveal" id="talos-card" style="--c:var(--magenta)">
+          <div class="card-top">
+            <span class="card-letter">T</span>
+            <span class="tag mono">Agentique</span>
+          </div>
+          <h3>Talos</h3>
+          <p class="card-sub">Agents IA</p>
+          <p>Talos, le géant de bronze qui veillait sur la Crète. Vos agents IA veillent sur votre activité, jour et nuit, chacun avec son rôle et sa mission.</p>
+          <div class="agents">
+            <div class="agent"><span class="agent-ico">☎</span><b>Accueil</b><small>Répond au téléphone, au chat et sur WhatsApp</small></div>
+            <div class="agent"><span class="agent-ico">◎</span><b>Commercial</b><small>Qualifie les demandes et relance les devis</small></div>
+            <div class="agent"><span class="agent-ico">✚</span><b>SAV</b><small>Suit les clients et répond aux questions</small></div>
+            <div class="agent"><span class="agent-ico">▤</span><b>Back-office</b><small>Trie les mails, lit et classe les documents</small></div>
+          </div>
+        </article>
+
+        <article class="card reveal" id="relais" style="--c:var(--gold)">
+          <div class="card-top">
+            <span class="card-letter">R</span>
+            <span class="tag mono">Automatisation</span>
+          </div>
+          <h3>Relais</h3>
+          <p class="card-sub">Automatisations internes</p>
+          <p>Les tâches répétitives passent le relais aux machines. Vous récupérez votre temps pour votre vrai métier.</p>
+          <ul>
+            <li>Devis → facture → relance, sans y toucher</li>
+            <li>Agenda, CRM et compta synchronisés</li>
+            <li>Rapports automatiques chaque semaine</li>
+            <li>Vos outils connectés entre eux</li>
+          </ul>
+        </article>
+
+        <article class="card reveal" id="astrolabe" style="--c:var(--cyan)">
+          <div class="card-top">
+            <span class="card-letter">A</span>
+            <span class="tag mono">Sur mesure</span>
+          </div>
+          <h3>Astrolabe</h3>
+          <p class="card-sub">Modules sur mesure</p>
+          <p>L'instrument de précision des navigateurs. Des outils taillés pour votre métier, rien de superflu.</p>
+          <ul>
+            <li>Devis et facturation en ligne</li>
+            <li>Réservation et prise de rendez-vous</li>
+            <li>Espace client, suivi de chantier</li>
+            <li>Paiement et signature électronique</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ TALOS EN ACTION ============ -->
+    <section class="section split" id="talos">
+      <div class="split-text reveal">
+        <p class="kicker mono">// 02 — Le système en action</p>
+        <h2>8&nbsp;h&nbsp;02. Un client appelle.<br><span class="grad">Vous êtes sur un chantier.</span></h2>
+        <p class="lead">Pas grave. Les cinq orbites travaillent ensemble&nbsp;: l'agent répond, qualifie, chiffre, planifie et relance. Vous, vous validez d'un pouce.</p>
+        <ul class="checks">
+          <li>Aucun appel manqué, même le soir et le week-end</li>
+          <li>Un devis envoyé en quelques minutes au lieu de quelques jours</li>
+          <li>Vous gardez la main&nbsp;: rien ne part sans vos règles</li>
+        </ul>
+      </div>
+
+      <div class="console reveal" id="console" aria-label="Simulation d'une mission automatisée">
+        <div class="console-bar">
+          <span></span><span></span><span></span>
+          <p class="mono">mission-control — simulation</p>
+          <em class="live mono">● LIVE</em>
+        </div>
+        <ol class="console-body mono" id="consoleBody"></ol>
+      </div>
+    </section>
+
+    <!-- ============ CHIFFRES ============ -->
+    <section class="section stats reveal">
+      <div class="stat"><span class="stat-num" data-count="24" data-suffix="/7">0</span><span class="stat-label">Vos agents ne dorment jamais</span></div>
+      <div class="stat"><span class="stat-num" data-count="5" data-suffix="">0</span><span class="stat-label">Offres, un seul interlocuteur</span></div>
+      <div class="stat"><span class="stat-num" data-count="100" data-suffix=" %">0</span><span class="stat-label">Sur mesure, zéro template</span></div>
+      <div class="stat"><span class="stat-num" data-count="0" data-suffix=" jargon">0</span><span class="stat-label">On parle votre langue</span></div>
+    </section>
+
+    <!-- ============ PLAN DE VOL ============ -->
+    <section class="section" id="vol">
+      <header class="section-head reveal">
+        <p class="kicker mono">// 03 — Plan de vol</p>
+        <h2>Du briefing<br><span class="grad">à la mise en orbite.</span></h2>
+      </header>
+
+      <ol class="timeline" id="timeline">
+        <li class="step reveal"><span class="step-n mono">T-04</span><div><h3>Briefing</h3><p>Un appel de 30 minutes pour comprendre votre métier, vos clients et ce qui vous fait perdre du temps.</p></div></li>
+        <li class="step reveal"><span class="step-n mono">T-03</span><div><h3>Trajectoire</h3><p>Un audit clair et un plan d'action chiffré. Vous savez exactement ce qu'on construit, et pourquoi.</p></div></li>
+        <li class="step reveal"><span class="step-n mono">T-02</span><div><h3>Assemblage</h3><p>Design, développement, agents et intégrations. Une démo chaque semaine, vous suivez tout.</p></div></li>
+        <li class="step reveal"><span class="step-n mono">T-01</span><div><h3>Lancement</h3><p>Mise en ligne, tests en conditions réelles et prise en main avec votre équipe.</p></div></li>
+        <li class="step reveal"><span class="step-n mono">T+00</span><div><h3>Pilotage</h3><p>Suivi, optimisations et un rapport mensuel lisible. On ajuste la trajectoire ensemble.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- ============ POUR QUI ============ -->
+    <section class="section who reveal">
+      <header class="section-head">
+        <p class="kicker mono">// 04 — Équipage</p>
+        <h2>Pensé pour ceux<br><span class="grad">qui font tourner la France.</span></h2>
+      </header>
+      <div class="chips">
+        <span>Plombiers</span><span>Électriciens</span><span>Menuisiers</span><span>Couvreurs</span><span>Paysagistes</span><span>Maçons</span><span>Peintres</span><span>Garages</span><span>Restaurants</span><span>Boulangeries</span><span>Salons de coiffure</span><span>Instituts</span><span>Commerces</span><span>Cabinets</span><span>Immobilier</span><span>PME industrielles</span>
+      </div>
+
+      <div class="why">
+        <div class="why-item"><span class="why-n mono">01</span><h3>Un seul interlocuteur</h3><p>Web, pub, IA et automatisation au même endroit. Fini les cinq prestataires qui ne se parlent pas.</p></div>
+        <div class="why-item"><span class="why-n mono">02</span><h3>Simple et lisible</h3><p>Des explications claires, des prix annoncés avant de commencer, des outils que vous utilisez vraiment.</p></div>
+        <div class="why-item"><span class="why-n mono">03</span><h3>Mesurable</h3><p>Appels, devis, rendez-vous, heures gagnées&nbsp;: un tableau de bord montre ce que ça vous rapporte.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ LE NOM ============ -->
+    <section class="section name reveal">
+      <p class="kicker mono">// Pourquoi Atlas X</p>
+      <blockquote>
+        <span class="grad">Atlas</span> porte le ciel sur ses épaules.<br>
+        <span class="grad">X</span>, c'est l'inconnue qu'on résout ensemble&nbsp;: votre croissance.
+      </blockquote>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section" id="faq">
+      <header class="section-head reveal">
+        <p class="kicker mono">// 05 — Questions fréquentes</p>
+        <h2>Avant le <span class="grad">décollage.</span></h2>
+      </header>
+      <div class="faq">
+        <details class="reveal">
+          <summary>C'est quoi le GEO&nbsp;?</summary>
+          <p>Le Generative Engine Optimization. De plus en plus de clients demandent directement à ChatGPT, Gemini ou Perplexity «&nbsp;un bon plombier près de chez moi&nbsp;». Le GEO travaille votre présence pour que ces IA vous citent, comme le SEO le fait pour Google.</p>
+        </details>
+        <details class="reveal">
+          <summary>Un agent IA, concrètement, ça fait quoi&nbsp;?</summary>
+          <p>C'est un assistant qui a un rôle précis&nbsp;: répondre aux appels, qualifier une demande, préparer un devis, relancer un client, trier vos mails. Il suit vos règles, travaille avec vos outils, et vous prévient dès qu'une décision vous revient.</p>
+        </details>
+        <details class="reveal">
+          <summary>Je n'y connais rien en tech, c'est un problème&nbsp;?</summary>
+          <p>Au contraire, c'est notre travail. On s'occupe de tout, on vous explique simplement, et on vous forme à ce qui vous sert au quotidien. Rien de plus.</p>
+        </details>
+        <details class="reveal">
+          <summary>Combien ça coûte&nbsp;?</summary>
+          <p>Chaque projet est chiffré après le briefing, avec un devis clair et sans surprise. On peut commencer petit (un site, une automatisation) et ajouter des orbites au fur et à mesure.</p>
+        </details>
+        <details class="reveal">
+          <summary>En combien de temps c'est en ligne&nbsp;?</summary>
+          <p>Ça dépend de la mission. Un site vitrine se compte en semaines, une automatisation simple peut tourner en quelques jours. Le calendrier exact est dans le plan de vol, avant de commencer.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section cta reveal" id="contact">
+      <div class="cta-inner">
+        <p class="countdown mono" id="countdown" aria-hidden="true">T-<span>10</span></p>
+        <h2>Prêt pour<br><span class="grad">le décollage&nbsp;?</span></h2>
+        <p class="lead">Un appel de 30 minutes, gratuit, pour voir ce qu'Atlas X peut faire décoller chez vous.</p>
+        <div class="hero-ctas center">
+          <a href="mailto:contact@atlasx.fr?subject=Mission%20Atlas%20X" class="btn btn-primary btn-lg magnetic">Lancer la mission <span class="arrow">→</span></a>
+        </div>
+        <p class="cta-note mono">contact@atlasx.fr</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <span class="brand-word">ATLAS<b>X</b></span>
+      <p>Agence web, IA &amp; automatisation · France</p>
+    </div>
+    <p class="footer-astra mono">Apogée · Signal · Talos · Relais · Astrolabe</p>
+    <p class="footer-copy mono">© 2026 Atlas X <span class="beta">BETA</span></p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
