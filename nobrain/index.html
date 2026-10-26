@@ -265,20 +265,21 @@
           <span>pour votre</span>
           <span class="red">métier<i>.</i></span>
         </p>
-        <figure class="engine" id="engine" aria-label="Schéma : trente tâches en désordre se rangent d'elles-mêmes dans une grille, il ne reste au centre que votre métier.">
-          <figcaption class="engine-top">
-            <span>Fig. 3 — Le système</span>
-            <span class="engine-state" id="engineState">Tri…</span>
+        <figure class="machine" id="machine" aria-label="Animation : les demandes de vos clients entrent dans la machine NoBrain et ressortent traitées, puis s'empilent.">
+          <figcaption class="machine-top">
+            <span>Fig. 3 — En ce moment, chez NoBrain</span>
+            <span class="machine-live">En marche</span>
           </figcaption>
-          <div class="engine-stage">
-            <canvas id="engineCanvas" aria-hidden="true"></canvas>
-            <span class="engine-axis engine-axis-x" aria-hidden="true"><b>A</b><b>B</b><b>C</b><b>D</b><b>E</b><b>F</b><b>G</b></span>
-            <span class="engine-axis engine-axis-y" aria-hidden="true"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b></span>
+          <div class="machine-stage" id="machineStage">
+            <p class="machine-fallback">Une demande entre. Elle ressort traitée. Et ainsi de suite, jour et nuit.</p>
           </div>
-          <div class="engine-legend">
-            <span><i class="lg lg-task"></i>Tâches <b id="engineCount">48</b></span>
-            <span><i class="lg lg-core"></i>Votre métier <b>D4</b></span>
-            <span class="engine-order">Ordre <b id="engineOrder">0</b><span>%</span></span>
+          <div class="machine-legend">
+            <span><i class="lg lg-in"></i>Entre&nbsp;: ce qui vous prend la tête</span>
+            <span><i class="lg lg-out"></i>Sort&nbsp;: c'est fait</span>
+          </div>
+          <div class="machine-foot">
+            <span>Il est <b id="machineClock">--:--</b>. Ça tourne.</span>
+            <span>Réglé depuis votre arrivée&nbsp;: <b id="machineDone">0</b></span>
           </div>
         </figure>
         <p class="manifesto-side">Pas pour les mots de passe, les algorithmes, les relances et les tableaux. Une tête libre fait du meilleur travail. C'est tout le principe.</p>
@@ -338,5 +339,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script type="module" src="machine.js"></script>
 </body>
 </html>
