@@ -1,4 +1,4 @@
-/* NoBrain — Fig. 3 : la machine (boucle 3D)
+/* Nobrayn — Fig. 3 : la machine (boucle 3D)
    Les demandes entrent à gauche, la machine les traite, elles ressortent
    en rouge, « faites », et s'empilent. Jour et nuit. */
 
@@ -136,8 +136,8 @@ function run(THREE) {
     // logo
     g.fillStyle = C.bg; g.textBaseline = 'alphabetic';
     g.font = '800 96px ' + FONT;
-    const no = g.measureText('no').width, br = g.measureText('brain').width;
-    g.fillText('no', 44, 150); g.fillText('brain', 44 + no, 150);
+    const no = g.measureText('no').width, br = g.measureText('brayn').width;
+    g.fillText('no', 44, 150); g.fillText('brayn', 44 + no, 150);
     g.fillStyle = C.red;
     g.fillRect(40 + no, 118, br + 8, 11);
     g.fillText('.', 44 + no + br, 150);
