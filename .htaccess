@@ -1,0 +1,5 @@
+# Nobrayn : tout le trafic vers https://nobrayn.fr
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://nobrayn.fr%{REQUEST_URI} [L,R=301]

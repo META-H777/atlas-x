@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nobrayn — Pensez à autre chose.</title>
+  <meta name="description" content="Site, référencement, publicité, réseaux, assistants IA, devis et factures : Nobrayn s'en occupe. Vous, vous pensez à votre métier.">
+  <meta name="theme-color" content="#f3f2ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Aperçu de partage (WhatsApp, LinkedIn, iMessage…) -->
+  <link rel="canonical" href="https://nobrayn.fr/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Nobrayn">
+  <meta property="og:title" content="Nobrayn — Pensez à autre chose.">
+  <meta property="og:description" content="Votre site, vos clients, vos devis, vos réseaux : rayés de votre liste. Il ne vous reste que votre métier.">
+  <meta property="og:url" content="https://nobrayn.fr/">
+  <meta property="og:image" content="https://nobrayn.fr/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nobrayn. Pensez à autre chose.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nobrayn — Pensez à autre chose.">
+  <meta name="twitter:description" content="Il ne vous reste que votre métier.">
+  <meta name="twitter:image" content="https://nobrayn.fr/og.png">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script>
+    // Thème appliqué avant le rendu (clair par défaut, comme une affiche)
+    (function () {
+      var t = 'light';
+      try { t = localStorage.getItem('nobrayn-theme') || 'light'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+</head>
+<body>
+  <div class="grid-overlay" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="wrap nav-row">
+      <a href="#top" class="logo" aria-label="Nobrayn, accueil">no<s>brayn</s><i>.</i></a>
+
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#liste"><span>01</span>La liste</a>
+        <a href="#qui"><span>02</span>Qui pense</a>
+        <a href="#methode"><span>03</span>Méthode</a>
+        <a href="#questions"><span>04</span>Questions</a>
+      </nav>
+
+      <div class="nav-tools">
+        <p class="meter" aria-live="polite" title="Ce qu'il vous reste en tête">
+          <span class="meter-label">En tête</span>
+          <span class="meter-value" id="meter">07</span>
+        </p>
+        <button class="tool" id="gridToggle" type="button" aria-pressed="false" title="Afficher la grille (G)">Grille</button>
+        <button class="tool tool-theme" id="themeToggle" type="button" aria-label="Changer de thème" title="Clair / sombre">
+          <span class="dot" aria-hidden="true"></span>
+        </button>
+        <a class="nav-cta" href="#contact">Nous écrire</a>
+        <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="menu" id="menu" hidden>
+      <a href="#liste"><span>01</span>La liste</a>
+      <a href="#qui"><span>02</span>Qui pense</a>
+      <a href="#methode"><span>03</span>Méthode</a>
+      <a href="#questions"><span>04</span>Questions</a>
+      <a href="#contact"><span>05</span>Nous écrire</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero wrap">
+      <div class="hero-meta">
+        <span>Fig. 1</span>
+        <span>Artisans, TPE, PME</span>
+        <span>France</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="line">Pensez</span>
+        <span class="line">à autre</span>
+        <span class="line">chose<i>.</i></span>
+      </h1>
+
+      <aside class="todo" aria-label="Votre liste du jour">
+        <header class="todo-head">
+          <span>À penser aujourd'hui</span>
+          <button class="replay" id="replay" type="button" aria-label="Rejouer">↺</button>
+        </header>
+        <ol class="todo-list" id="todo">
+          <li>Mettre le site à jour</li>
+          <li>Répondre aux avis Google</li>
+          <li>Relancer le devis Martin</li>
+          <li>Poster quelque chose sur Insta</li>
+          <li>Rappeler le numéro de 8 h 02</li>
+          <li>Être trouvé sur ChatGPT&nbsp;?</li>
+          <li>Faire les factures ce soir</li>
+          <li class="keep">Votre métier</li>
+        </ol>
+      </aside>
+
+      <p class="hero-sub">
+        Il y a ce que vous savez faire mieux que personne.
+        Et il y a tout le reste. <strong>Le reste, <span style="white-space:nowrap">rayez-le.</span></strong>
+      </p>
+
+      <a class="hero-down" href="#liste" aria-label="Voir la liste">
+        <span>Voir ce qu'on raye</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+      </a>
+    </section>
+
+    <!-- ============ BANDE ============ -->
+    <div class="band" aria-hidden="true">
+      <div class="band-track">
+        <span>Site</span><span>Référencement</span><span>GEO</span><span>Publicité</span><span>Réseaux</span><span>Assistants IA</span><span>Automatisations</span><span>Devis</span><span>Factures</span><span>Réservations</span><span>Sur mesure</span>
+        <span>Site</span><span>Référencement</span><span>GEO</span><span>Publicité</span><span>Réseaux</span><span>Assistants IA</span><span>Automatisations</span><span>Devis</span><span>Factures</span><span>Réservations</span><span>Sur mesure</span>
+      </div>
+    </div>
+
+    <!-- ============ 01 LA LISTE ============ -->
+    <section class="section wrap" id="liste">
+      <header class="sec-head">
+        <span class="sec-num">01</span>
+        <h2>Sept choses<br>que vous n'aurez<br>plus en tête.</h2>
+        <p class="sec-lead">Chaque ligne, c'est une pensée qui vous suivait le soir. Faites défiler&nbsp;: on les raye une par une.</p>
+      </header>
+
+      <div class="table" role="list">
+        <div class="row row-head" aria-hidden="true">
+          <span>N°</span><span>Ce qui vous trotte dans la tête</span><span>Ce qui se passe maintenant</span><span>Domaine</span>
+        </div>
+
+        <article class="row" role="listitem">
+          <span class="r-num">01</span>
+          <p class="r-thought"><s>«&nbsp;Est-ce qu'on me trouve, au moins&nbsp;?&nbsp;»</s></p>
+          <p class="r-now">Un site net, rapide, lisible sur téléphone. Tenu à jour sans que vous ouvriez quoi que ce soit.</p>
+          <span class="r-tag">Site vitrine</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">02</span>
+          <p class="r-thought"><s>«&nbsp;Pourquoi c'est toujours l'autre qui sort en premier&nbsp;?&nbsp;»</s></p>
+          <p class="r-now">Fiche Google soignée, avis qui reçoivent une réponse, mots justes au bon endroit. Vous remontez.</p>
+          <span class="r-tag">SEO</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">03</span>
+          <p class="r-thought"><s>«&nbsp;Et quand les gens demandent à ChatGPT&nbsp;?&nbsp;»</s></p>
+          <p class="r-now">Quand quelqu'un demande «&nbsp;un bon plombier à côté&nbsp;» à une IA, c'est votre nom qui ressort.</p>
+          <span class="r-tag">GEO</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">04</span>
+          <p class="r-thought"><s>«&nbsp;Faudrait que je poste un truc.&nbsp;»</s></p>
+          <p class="r-now">Vos chantiers deviennent des publications. Vos réseaux vivent, des pubs ciblées tournent, le budget est suivi.</p>
+          <span class="r-tag">SMA · SEA</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">05</span>
+          <p class="r-thought"><s>«&nbsp;J'ai encore raté un appel.&nbsp;»</s></p>
+          <p class="r-now">Un assistant répond à toute heure, comprend la demande, note les infos et cale le rendez-vous dans votre agenda.</p>
+          <span class="r-tag">Agent IA</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">06</span>
+          <p class="r-thought"><s>«&nbsp;Les devis, ce sera dimanche.&nbsp;»</s></p>
+          <p class="r-now">Devis, factures, relances, rappels de rendez-vous&nbsp;: ça part tout seul, au bon moment, avec votre en-tête.</p>
+          <span class="r-tag">Automatisation</span>
+        </article>
+
+        <article class="row" role="listitem">
+          <span class="r-num">07</span>
+          <p class="r-thought"><s>«&nbsp;Il me faudrait un outil qui…&nbsp;»</s></p>
+          <p class="r-now">Réservation, suivi de chantier, espace client, calcul de devis&nbsp;: s'il n'existe pas, il est fait pour vous.</p>
+          <span class="r-tag">Sur mesure</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 02 QUI PENSE ============ -->
+    <section class="section wrap" id="qui">
+      <header class="sec-head">
+        <span class="sec-num">02</span>
+        <h2>Qui pense<br>à quoi.</h2>
+        <p class="sec-lead">Fig. 2 — Répartition de la charge mentale, après Nobrayn.</p>
+      </header>
+
+      <div class="split">
+        <div class="split-you">
+          <span class="split-label">Vous</span>
+          <p class="split-one">Votre métier<i>.</i></p>
+          <span class="split-count">1</span>
+        </div>
+
+        <div class="split-us">
+          <span class="split-label">Nous</span>
+          <ul class="cloud">
+            <li>Nom de domaine</li><li>Hébergement</li><li>Mises à jour</li><li>Sauvegardes</li><li>Sécurité</li><li>Vitesse du site</li>
+            <li>Photos de chantier</li><li>Textes</li><li>Mots-clés</li><li>Fiche Google</li><li>Réponses aux avis</li><li>Visibilité dans les IA</li>
+            <li>Calendrier des posts</li><li>Visuels</li><li>Annonces</li><li>Budget pub</li><li>Ciblage</li><li>Statistiques</li>
+            <li>Appels manqués</li><li>Messages du soir</li><li>Prise de rendez-vous</li><li>Rappels clients</li><li>Devis</li><li>Factures</li>
+            <li>Relances</li><li>Export compta</li><li>Formulaires</li><li>Outils internes</li><li>Rapport du mois</li><li>Le reste</li>
+          </ul>
+          <span class="split-count">30</span>
+        </div>
+      </div>
+
+      <div class="ratio" aria-hidden="true">
+        <span class="ratio-you"></span><span class="ratio-us"></span>
+      </div>
+      <p class="caption">Côté Nobrayn&nbsp;: des gens qui réfléchissent, et des machines qui ne dorment jamais. Vous ne verrez ni les uns ni les autres travailler. Juste le résultat.</p>
+    </section>
+
+    <!-- ============ 03 MÉTHODE ============ -->
+    <section class="section wrap" id="methode">
+      <header class="sec-head">
+        <span class="sec-num">03</span>
+        <h2>Trois étapes.<br>La troisième<br>est la meilleure.</h2>
+      </header>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num">1</span>
+          <h3>On parle.</h3>
+          <p>Trente minutes, de votre métier, pas du nôtre. Vous nous dites ce qui vous prend la tête. On note.</p>
+        </li>
+        <li class="step">
+          <span class="step-num">2</span>
+          <h3>On installe.</h3>
+          <p>Site, référencement, assistants, automatisations&nbsp;: on met en place, on teste, on branche sur vos outils. Vous validez, c'est tout.</p>
+        </li>
+        <li class="step step-last">
+          <span class="step-num">3</span>
+          <h3>Vous oubliez.</h3>
+          <p>Ça tourne. Une fois par mois, une page&nbsp;: ce qui s'est passé, ce qui a marché. Si vous avez le temps de la lire.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ MANIFESTE ============ -->
+    <section class="manifesto" aria-label="Manifeste">
+      <div class="wrap">
+        <p class="manifesto-text">
+          <span>Votre tête</span>
+          <span>est faite</span>
+          <span>pour votre</span>
+          <span class="red">métier<i>.</i></span>
+        </p>
+        <figure class="machine" id="machine" aria-label="Animation : les demandes de vos clients entrent dans la machine Nobrayn et ressortent traitées, puis s'empilent.">
+          <figcaption class="machine-top">
+            <span>Fig. 3 — En ce moment, chez Nobrayn</span>
+            <span class="machine-live">En marche</span>
+          </figcaption>
+          <div class="machine-stage" id="machineStage">
+            <p class="machine-fallback">Une demande entre. Elle ressort traitée. Et ainsi de suite, jour et nuit.</p>
+          </div>
+          <div class="machine-legend">
+            <span><i class="lg lg-in"></i>Entre&nbsp;: ce qui vous prend la tête</span>
+            <span><i class="lg lg-out"></i>Sort&nbsp;: c'est fait</span>
+          </div>
+          <div class="machine-foot">
+            <span>Il est <b id="machineClock">--:--</b>. Ça tourne.</span>
+            <span>Réglé depuis votre arrivée&nbsp;: <b id="machineDone">0</b></span>
+          </div>
+        </figure>
+        <p class="manifesto-side">Pas pour les mots de passe, les algorithmes, les relances et les tableaux. Une tête libre fait du meilleur travail. C'est tout le principe.</p>
+      </div>
+    </section>
+
+    <!-- ============ 04 QUESTIONS ============ -->
+    <section class="section wrap" id="questions">
+      <header class="sec-head">
+        <span class="sec-num">04</span>
+        <h2>Questions<br>courtes.</h2>
+        <p class="sec-lead">Réponses courtes.</p>
+      </header>
+
+      <div class="faq">
+        <details>
+          <summary><span>Faut-il s'y connaître&nbsp;?</span><b aria-hidden="true">+</b></summary>
+          <p>Non. C'est même le but. Si vous savez envoyer un message, vous savez travailler avec nous.</p>
+        </details>
+        <details>
+          <summary><span>C'est pour qui&nbsp;?</span><b aria-hidden="true">+</b></summary>
+          <p>Artisans, commerçants, indépendants, TPE et PME. Ceux qui sont sur le terrain toute la journée et sur l'ordinateur le soir.</p>
+        </details>
+        <details>
+          <summary><span>Combien ça coûte&nbsp;?</span><b aria-hidden="true">+</b></summary>
+          <p>Un prix fixe, annoncé avant de commencer. Pas de surprise, pas de jargon. Le devis est gratuit.</p>
+        </details>
+        <details>
+          <summary><span>Et si je veux reprendre la main&nbsp;?</span><b aria-hidden="true">+</b></summary>
+          <p>Tout est à votre nom&nbsp;: le site, le domaine, les comptes, les données. Vous partez quand vous voulez, avec tout.</p>
+        </details>
+        <details>
+          <summary><span>L'IA, ça remplace qui&nbsp;?</span><b aria-hidden="true">+</b></summary>
+          <p>Personne chez vous. Elle remplace les tâches qui vous prenaient vos soirées.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <span class="sec-num">05</span>
+        <p class="contact-pre">Une dernière chose à penser&nbsp;:</p>
+        <a class="contact-link" href="mailto:contact@nobrayn.fr?subject=Ce%20qui%20me%20prend%20la%20t%C3%AAte">
+          <span>Nous écrire</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20 20 4M8 4h12v12"/></svg>
+        </a>
+        <p class="contact-post">contact@nobrayn.fr — Dites-nous juste ce qui vous prend la tête. Ensuite, ce n'est plus votre problème.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <span class="logo logo-sm">no<s>brayn</s><i>.</i></span>
+    <span>Grille 12 colonnes · Inter Tight · Rouge signal</span>
+    <span>© 2026 Nobrayn · Version de test</span>
+  </footer>
+
+  <script src="app.js"></script>
+  <script type="module" src="machine.js"></script>
+</body>
+</html>
