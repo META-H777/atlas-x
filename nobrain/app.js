@@ -12,7 +12,7 @@
   var themeBtn = document.getElementById('themeToggle');
   themeBtn.addEventListener('click', function () {
     var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    var apply = function () { root.setAttribute('data-theme', next); store('nobrain-theme', next); };
+    var apply = function () { root.setAttribute('data-theme', next); store('nobrayn-theme', next); };
     if (document.startViewTransition && !reduceMotion) document.startViewTransition(apply);
     else apply();
   });
@@ -22,9 +22,9 @@
   function setGrid(on) {
     root.classList.toggle('show-grid', on);
     gridBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    store('nobrain-grid', on ? '1' : '0');
+    store('nobrayn-grid', on ? '1' : '0');
   }
-  if (read('nobrain-grid') === '1') setGrid(true);
+  if (read('nobrayn-grid') === '1') setGrid(true);
   gridBtn.addEventListener('click', function () { setGrid(!root.classList.contains('show-grid')); });
   document.addEventListener('keydown', function (e) {
     if (e.key && e.key.toLowerCase() === 'g' && !e.metaKey && !e.ctrlKey && !e.altKey &&
