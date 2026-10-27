@@ -1,5 +1,5 @@
 /* =========================================================
-   NoBrain — Swiss / International Typographic Style
+   Nobrayn — Swiss / International Typographic Style
    Grille 12 colonnes, grotesque, aplats, un seul rouge.
    ========================================================= */
 
@@ -406,7 +406,7 @@ html.show-grid .grid-overlay { opacity: 1; }
 .manifesto-text i { color: var(--paper); }
 .manifesto-text { grid-row: 1; grid-column: 1 / span 6; }
 
-/* Fig. 3 : la machine NoBrain (boucle 3D) */
+/* Fig. 3 : la machine Nobrayn (boucle 3D) */
 .machine {
   grid-column: 7 / span 6; grid-row: 1;
   align-self: start;

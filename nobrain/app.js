@@ -1,4 +1,4 @@
-/* NoBrain — interactions (sans dépendance) */
+/* Nobrayn — interactions (sans dépendance) */
 (function () {
   'use strict';
 
