@@ -8,7 +8,7 @@ const COCKPIT_USERS = [
     'romain' => ['name' => 'Romain', 'hash' => '$2y$11$Ntooy70b9UynP0oVJT3u8u.St.PN4nEyb4nYco2eBWaX83G3Lv1jC'],
     'pa'     => ['name' => "P'A",    'hash' => '$2y$11$1GrR/q2XXkJojoNiqEuOYOYI4UxFYp2osYgxd8yiVoB7RHGBUMS7e'],
 ];
-const COCKPIT_COLLECTIONS = ['tasks', 'milestones', 'objectives', 'products', 'revenue', 'players', 'config'];
+const COCKPIT_COLLECTIONS = ['tasks', 'milestones', 'objectives', 'products', 'revenue', 'victories', 'players', 'config'];
 const COCKPIT_MAX_BYTES = 5000000;
 const COCKPIT_SESSION_DAYS = 30;
 

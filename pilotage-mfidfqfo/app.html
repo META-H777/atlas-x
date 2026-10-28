@@ -97,6 +97,52 @@ a { color: inherit; text-decoration: none; }
 .faint { color: var(--fg-3); }
 em.r, .r { color: var(--red); font-style: normal; }
 
+/* ---------- Plan de la semaine, agence, victoires ---------- */
+.stat.week { gap: 12px; }
+.wk { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.wk li { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 8px; font-size: 14px; line-height: 1.3; }
+.wk .d { font: 500 12px/1.5 var(--mono); color: var(--fg-3); }
+.wk .t { color: var(--fg); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wk li.today .d { color: var(--red); }
+.wk li.done .t { color: var(--fg-3); text-decoration: line-through; text-decoration-color: rgb(var(--red-rgb) / .7); }
+.wk-none { font-size: 15px; color: var(--fg-2); }
+.agency { position: relative; overflow: hidden; min-height: 300px; aspect-ratio: 21 / 8; border-radius: var(--r-lg); background: radial-gradient(60% 70% at 50% 100%, rgba(255, 51, 38, .14), transparent 70%), #050507; color: #f3f2ee; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); isolation: isolate; }
+.agency::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px); z-index: 2; }
+.agency-floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 75%; transform: perspective(420px) rotateX(62deg); transform-origin: 50% 100%; background-image: linear-gradient(rgba(255, 255, 255, .13) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .13) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: linear-gradient(to top, #000 20%, transparent 95%); mask-image: linear-gradient(to top, #000 20%, transparent 95%); animation: floor 14s linear infinite; }
+@keyframes floor { to { background-position: 0 56px; } }
+.agency-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; z-index: 1; }
+.agency-center p { margin: 0; max-width: 380px; font-size: 16px; color: rgba(243, 242, 238, .62); }
+.agency-state { display: inline-flex; align-items: center; gap: 8px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: rgba(243, 242, 238, .7); padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, .06); }
+.agency-state i { width: 7px; height: 7px; border-radius: 50%; background: rgba(243, 242, 238, .35); }
+.agency-roster { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 16px; z-index: 1; }
+.agency-roster span { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; padding: 6px 11px; border-radius: 999px; background: rgba(255, 255, 255, .05); color: rgba(243, 242, 238, .5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
+.agency-roster i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(243, 242, 238, .4); }
+.vics { display: flex; flex-direction: column; gap: 4px; }
+.vic { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, auto) auto; align-items: center; gap: 16px; padding: 14px 16px; border-radius: var(--r-md); transition: background .25s; }
+.vic:hover { background: var(--surface); }
+.vic-n { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font: 600 13px var(--mono); color: var(--fg-3); background: var(--surface); box-shadow: inset 0 0 0 1.5px rgb(var(--ink-rgb) / .08); transition: transform .3s var(--ease), background .3s; }
+.vic-n:hover { transform: scale(1.06); color: var(--fg); }
+.vic h3 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; }
+.vic-meta { margin: 3px 0 0; font-size: 13px; color: var(--fg-3); }
+.vic-reward { text-align: right; min-width: 0; max-width: 240px; }
+.vic-reward .lbl { display: block; font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fg-3); }
+.vic-reward b { display: block; font-size: 14px; font-weight: 600; color: var(--fg-2); margin-top: 2px; }
+.vic.won .vic-n { background: radial-gradient(circle at 35% 30%, #ff8f84, var(--red) 60%, #a3140b); color: var(--ink-on-red); box-shadow: 0 0 0 5px rgb(var(--red-rgb) / .1), 0 8px 24px rgb(var(--red-rgb) / .3); }
+.vic.won .vic-reward .lbl { color: var(--red-2); }
+.vic.won .vic-reward b { color: var(--fg); }
+.vic:not(.won) h3 { color: var(--fg-2); }
+.vic-add { grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) auto; margin-top: 18px; }
+.journal .gain.hot { color: var(--red); font-weight: 600; }
+@media (max-width: 760px) {
+  .agency { aspect-ratio: auto; min-height: 340px; display: flex; flex-direction: column; padding: 28px 0 18px; }
+  .agency-center { position: relative; inset: auto; flex: 1; }
+  .agency-roster { position: relative; bottom: auto; }
+  .vic { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .vic-reward { grid-column: 2 / 3; text-align: left; max-width: none; }
+  .vic .del { grid-row: 1; grid-column: 3; }
+  .vic-add { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- Barre du haut ---------- */
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--top-bg); backdrop-filter: blur(18px) saturate(1.3); -webkit-backdrop-filter: blur(18px) saturate(1.3); }
 .top-row { display: flex; align-items: center; gap: 20px; height: 68px; }
@@ -438,7 +484,7 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; bo
 
 <div class="wrap">
   <div class="notice" id="whoBanner" hidden>
-    <p><b>Qui est aux commandes ?</b> <span class="muted">On s'en sert pour compter votre XP.</span></p>
+    <p><b>Qui est aux commandes ?</b> <span class="muted">On s'en sert pour signer vos actions.</span></p>
     <button class="btn sm" type="button" data-act="who" data-h="romain">Je suis Romain</button>
     <button class="btn sm red" type="button" data-act="who" data-h="pa">Je suis P'A</button>
   </div>
@@ -463,19 +509,33 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; bo
 (() => {
 'use strict';
 
-/* ================= Constantes (identiques à la V1 : mêmes données, même XP) ================= */
+/* ================= Constantes ================= */
 const NAMES = { romain: 'Romain', pa: "P'A", duo: 'Duo' };
 const INITIALS = { romain: 'RP', pa: 'PA', duo: '2×' };
 const SIZE_XP = { S: 10, M: 25, L: 50 };
 const XP_MILESTONE = 40, XP_OBJECTIVE = 100, XP_DAILY = 20, DAILY_GOAL = 3;
 const DEFAULT_TIERS = [50, 100, 500, 1000, 2000, 3500, 5000, 10000];
 const TIER_NAMES = ['Allumage', 'Décollage', 'Orbite basse', 'Orbite', 'Lune', 'Mars', 'Jupiter', 'Hors système', 'Proxima', 'Andromède'];
+/* Victoires : les grandes étapes à aller chercher, chacune débloque une récompense.
+   rule 'mrr' ou 'clients' : la victoire se coche toute seule quand le seuil est atteint. */
+const DEFAULT_VICTORIES = [
+  ['v01', 'Avoir un statut entrepreneurial pour Nobrayn', 'Fêter ça autour d\'un verre'],
+  ['v02', 'Closer notre premier contrat', 'Session karting', 'clients', 1],
+  ['v03', 'Closer notre première vente parrainage', 'Payer un restau au parrain'],
+  ['v04', 'Créer une interface de tracking pour nos clients', 'Session gaming'],
+  ['v05', 'Atteindre 1 000 € de MRR', 'Restau', 'mrr', 1000],
+  ['v06', 'Atteindre 5 000 € de MRR', 'Restau bistronomique', 'mrr', 5000],
+  ['v07', 'Atteindre 10 000 € de MRR', 'Restau gastronomique + réinstaller CS GO', 'mrr', 10000],
+  ['v08', 'Demander une rupture conventionnelle ou démissionner pour passer all-in sur Nobrayn', 'À définir ensemble']
+];
+const AGENTS = ['Responsable d\'agence', 'Coordinateur des équipes', 'Agent GEO', 'Agent SEO', 'Agent SEA'];
+const DAYS_SHORT = ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'];
 const RANKS = ['Recrue', 'Apprenti', 'Opérateur', 'Pilote', 'Navigateur', 'Commandant', 'Capitaine', 'Amiral', 'Légende', 'Hors système'];
 const STAGES = [['idee', 'Idée'], ['test', 'En test'], ['vente', 'En vente']];
 const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 const MONTHS_FULL = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-const S = { tasks: [], milestones: [], objectives: [], products: [], revenue: [], players: {}, config: {}, db: null, uid: null, handle: null, canWrite: true, online: false, view: null };
+const S = { tasks: [], milestones: [], objectives: [], products: [], revenue: [], victories: [], players: {}, config: {}, db: null, uid: null, handle: null, canWrite: true, online: false, view: null };
 const ls = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -525,50 +585,46 @@ function tiers() {
   return t.map(Number).filter((n) => n > 0).sort((a, b) => a - b);
 }
 function compute() {
-  const xp = { romain: 0, pa: 0, team: 0 };
-  const credit = (h, n) => { if (h === 'romain' || h === 'pa') xp[h] += n; else { xp.romain += n / 2; xp.pa += n / 2; } xp.team += n; };
   const done = S.tasks.filter((t) => t.status === 'done' && t.doneAt);
   const perDay = {};
   done.forEach((t) => {
     const h = t.doneBy || t.owner || 'duo';
-    credit(h, SIZE_XP[t.size] || 25);
     const k = dayKey(t.doneAt);
     const d = perDay[k] || (perDay[k] = { n: 0, romain: 0, pa: 0 });
     d.n++; if (h === 'romain' || h === 'pa') d[h]++;
   });
-  S.milestones.filter((m) => m.done).forEach((m) => credit(m.doneBy || 'duo', XP_MILESTONE));
-  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach((o) => credit(o.owner || 'duo', XP_OBJECTIVE));
-  Object.values(perDay).forEach((d) => { if (d.n >= DAILY_GOAL) credit('duo', XP_DAILY); });
   const mrr = S.revenue.filter((r) => r.active !== false && r.kind !== 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
   const cash = S.revenue.filter((r) => r.kind === 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
   const T = tiers();
   const won = T.filter((a) => mrr >= a);
-  won.forEach((a, i) => credit('duo', 50 * (i + 1)));
   let streak = 0;
   const cursor = new Date(); cursor.setHours(12, 0, 0, 0);
   if (!perDay[dayKey(cursor)]) cursor.setDate(cursor.getDate() - 1);
   while (perDay[dayKey(cursor)]) { streak++; cursor.setDate(cursor.getDate() - 1); }
-  let bestCombo = 0; Object.values(perDay).forEach((d) => { bestCombo = Math.max(bestCombo, d.n); });
-  const duoDay = Object.values(perDay).some((d) => d.romain > 0 && d.pa > 0);
   const today = perDay[todayKey()] || { n: 0, romain: 0, pa: 0 };
   const open = S.tasks.filter((t) => t.status !== 'done');
   const late = open.filter((t) => t.due && daysUntil(t.due) < 0);
-  const msDone = S.milestones.filter((m) => m.done).length;
-  const objWon = S.objectives.filter((o) => (o.progress || 0) >= 100).length;
-  const selling = S.products.filter((p) => p.stage === 'vente').length;
-  const badges = [
-    ['1', 'Premier pas', 'Une mission faite', done.length >= 1],
-    ['×3', 'Combo', '3 missions en un jour', bestCombo >= DAILY_GOAL],
-    ['2×', 'En duo', 'Tous les deux le même jour', duoDay],
-    ['7j', 'Série de 7', '7 jours d\'affilée', streak >= 7],
-    ['25', 'Machine', '25 missions faites', done.length >= 25],
-    ['◆', 'Premier jalon', 'Un jalon atteint', msDone >= 1],
-    ['%', 'Cap tenu', 'Un objectif à 100 %', objWon >= 1],
-    ['↗', 'En vitrine', 'Un produit en vente', selling >= 1],
-    ['€', 'Premier client', 'Un premier revenu', S.revenue.length >= 1],
-    ['100', 'Centurion', '100 missions faites', done.length >= 100]
-  ];
-  return { xp, perDay, done, open, late, today, streak, mrr, cash, T, won, badges };
+  const ckey = (r) => String(r.client || '').trim().toLowerCase();
+  const liveRev = S.revenue.filter((r) => r.active !== false && ckey(r));
+  const clients = new Set(liveRev.map(ckey)).size;
+  const recClients = new Set(liveRev.filter((r) => r.kind !== 'ponctuel').map(ckey)).size;
+  // Semaine en cours (lundi → dimanche)
+  const mon = new Date(); mon.setHours(12, 0, 0, 0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const wFrom = dayKey(mon.getTime()), wTo = dayKey(sun.getTime());
+  const inWeek = (s) => s && s >= wFrom && s <= wTo;
+  const th = new Date(mon); th.setDate(mon.getDate() + 3);
+  const y1 = new Date(th.getFullYear(), 0, 4);
+  const weekNo = 1 + Math.round(((th - y1) / 864e5 - 3 + ((y1.getDay() + 6) % 7)) / 7);
+  const weekItems = S.tasks.filter((t) => inWeek(t.due)).map((t) => ({ date: t.due, title: t.title, done: t.status === 'done', kind: 'task' }))
+    .concat(S.milestones.filter((m) => inWeek(m.date)).map((m) => ({ date: m.date, title: m.title, done: !!m.done, kind: 'jalon' })))
+    .sort((a, b) => a.date.localeCompare(b.date) || (a.done - b.done));
+  const week = { n: weekNo, from: wFrom, to: wTo, items: weekItems };
+  const victories = S.victories.slice().sort(byOrder).map((v) => {
+    const auto = (v.rule === 'mrr' && mrr >= num(v.target)) || (v.rule === 'clients' && clients >= num(v.target));
+    return Object.assign({}, v, { won: !!v.done || auto, autoMet: auto });
+  });
+  return { perDay, done, open, late, today, streak, mrr, cash, T, won, clients, recClients, week, victories };
 }
 
 /* ================= Stockage : base partagée (claude.ai) ou navigateur (ailleurs) ================= */
@@ -606,7 +662,7 @@ function LocalDB() {
     load(data) { store = JSON.parse(JSON.stringify(data)); persist(); notify(); }
   };
 }
-const COLLS = ['tasks', 'milestones', 'objectives', 'products', 'revenue'];
+const COLLS = ['tasks', 'milestones', 'objectives', 'products', 'revenue', 'victories'];
 async function write(fn) {
   if (!S.db) { toast('Hors ligne', 'Impossible d\'enregistrer ici.'); return false; }
   if (!S.canWrite) { toast('Lecture seule', 'Demandez un accès Éditeur à Romain.'); return false; }
@@ -627,7 +683,7 @@ function subscribeAll() {
     if (S.uid && m[S.uid] && m[S.uid].handle) { S.handle = m[S.uid].handle; ls.set('nobrayn-pilot', S.handle); }
     scheduleRender();
   }, () => {});
-  S.db.doc('config/main').onSnapshot((d) => { S.config = d.exists ? d.data() : {}; scheduleRender(); }, () => {});
+  S.db.doc('config/main').onSnapshot((d) => { S.config = d.exists ? d.data() : {}; S.cfgReady = true; scheduleRender(); }, () => {});
 }
 async function boot() {
   route();
@@ -698,12 +754,13 @@ function render() {
   const chip = $('#whoChip');
   if (S.handle) {
     chip.hidden = false;
-    chip.innerHTML = `<span class="avatar sm ${S.handle}">${INITIALS[S.handle]}</span><span class="nm">${esc(NAMES[S.handle])} · niv. ${levelOf(C.xp[S.handle] || 0).L}</span>`;
+    chip.innerHTML = `<span class="avatar sm ${S.handle}">${INITIALS[S.handle]}</span><span class="nm">${esc(NAMES[S.handle])}</span>`;
   } else chip.hidden = true;
   $('#whoBanner').hidden = !!S.handle || !S.online;
   $('#modeLabel').textContent = !S.online ? 'hors ligne' : S.db && S.db.local ? 'ce navigateur' : 'partagées';
   if (FILL[S.view]) FILL[S.view](C);
   Orb.feed(C);
+  syncVictories(C);
 }
 
 const SKELETON = {
@@ -719,13 +776,24 @@ const SKELETON = {
         <div class="orb-legend"><span><i></i><b class="num" id="lg-open">0</b>&nbsp;en orbite</span><span><i class="red"></i><b class="num" id="lg-done">0</b>&nbsp;faites aujourd'hui</span></div></div>
     </section>
     <section class="stats" id="ck-stats"></section>
+    <section class="sec"><div class="sec-head"><h2>Agence virtuelle</h2><span class="link">Bientôt en direct</span></div>
+      <div class="agency" role="img" aria-label="Écran de l'agence virtuelle, encore vide">
+        <div class="agency-floor"></div>
+        <div class="agency-center"><span class="agency-state"><i></i>Hors ligne</span><p>Vos agents IA apparaîtront ici, en 3D et en temps réel.</p></div>
+        <div class="agency-roster">${AGENTS.map((a) => `<span><i></i>${esc(a)}</span>`).join('')}</div>
+      </div></section>
     <section class="sec"><div class="sec-head"><h2>Route du MRR</h2><a href="#produits">Contrats →</a></div><div class="route" id="ck-route"></div></section>
     <section class="sec two">
       <div><div class="sec-head"><h2>À faire maintenant</h2><a href="#todo">Tout voir →</a></div><div class="list" id="ck-next"></div></div>
       <div><div class="sec-head"><h2>L'équipage</h2><span class="link" id="ck-team"></span></div><div class="duo" id="ck-duo"></div></div>
     </section>
     <section class="sec two">
-      <div><div class="sec-head"><h2>Succès</h2><span class="link" id="ck-bcount"></span></div><div class="medals" id="ck-medals"></div></div>
+      <div><div class="sec-head"><h2>Victoires</h2><span class="link" id="ck-bcount"></span></div><div class="vics" id="ck-vics"></div>
+        <form class="form-grid vic-add" id="f-vic">
+          <input class="in" id="vic-title" required maxlength="120" placeholder="Nouvelle victoire" aria-label="Victoire">
+          <input class="in" id="vic-reward" maxlength="120" placeholder="Récompense" aria-label="Récompense">
+          <button class="btn red" type="submit">Ajouter</button>
+        </form></div>
       <div><div class="sec-head"><h2>Journal</h2></div><ul class="journal" id="ck-log"></ul></div>
     </section>`,
   todo: () => `
@@ -738,7 +806,7 @@ const SKELETON = {
   planning: () => `
     <section class="page-title"><h1>Planning<i>.</i></h1><p id="pl-sum"></p></section>
     <section class="sec" style="margin-top:44px"><div class="timeline" id="pl-tl"></div></section>
-    <section class="sec"><div class="sec-head"><h2>Ajouter un jalon</h2><span class="link">+${XP_MILESTONE} XP quand il est atteint</span></div>
+    <section class="sec"><div class="sec-head"><h2>Ajouter un jalon</h2><span class="link">Il apparaît dans le plan de la semaine</span></div>
       <form class="form-grid" id="f-ms" style="grid-template-columns: minmax(0,2fr) minmax(0,1fr) auto">
         <input class="in" id="m-title" required maxlength="120" placeholder="Ex. Premier devis signé" aria-label="Jalon">
         <input class="in" id="m-date" type="date" required aria-label="Date">
@@ -754,7 +822,7 @@ const SKELETON = {
       </div>
       <button class="btn sm ghost" type="button" data-act="vision-edit" style="margin-top:22px; margin-left:-14px">Réécrire la vision</button>
     </section>
-    <section class="sec"><div class="sec-head"><h2>Objectifs</h2><span class="link">+${XP_OBJECTIVE} XP à 100 %</span></div><div class="cards" id="ob-list"></div></section>
+    <section class="sec"><div class="sec-head"><h2>Objectifs</h2></div><div class="cards" id="ob-list"></div></section>
     <section class="sec"><div class="sec-head"><h2>Nouvel objectif</h2></div>
       <form class="form-grid" id="f-obj" style="grid-template-columns: minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) auto">
         <input class="in" id="o-title" required maxlength="120" placeholder="Objectif, ex. 3 clients payés" aria-label="Objectif">
@@ -794,7 +862,7 @@ function adderHTML(id = 'f-task') {
     <button class="btn red" type="submit">Ajouter</button>
     <div class="adder-opts">
       <span><span class="lbl">Pour</span><span class="chips" data-pick="owner" style="display:inline-flex"><button type="button" class="chip" data-v="duo" aria-pressed="true">Duo</button><button type="button" class="chip" data-v="romain">Romain</button><button type="button" class="chip" data-v="pa">P'A</button></span></span>
-      <span><span class="lbl">Taille</span><span class="chips" data-pick="size" style="display:inline-flex"><button type="button" class="chip" data-v="S">Rapide · 10</button><button type="button" class="chip red" data-v="M" aria-pressed="true">Normal · 25</button><button type="button" class="chip" data-v="L">Gros · 50</button></span></span>
+      <span><span class="lbl">Taille</span><span class="chips" data-pick="size" style="display:inline-flex"><button type="button" class="chip" data-v="S">Rapide</button><button type="button" class="chip red" data-v="M" aria-pressed="true">Normal</button><button type="button" class="chip" data-v="L">Gros</button></span></span>
       <span><span class="lbl">Échéance</span><input class="in" id="${id}-due" type="date" aria-label="Échéance"></span>
     </div>
   </form>`;
@@ -812,7 +880,7 @@ function taskRow(t, opts = {}) {
   return `<div class="task ${isDone ? 'is-done' : ''}">
     <button class="tick ${st}" type="button" data-act="task-next" data-id="${esc(t.id)}" aria-label="${label}" title="${label}"></button>
     <div style="min-width:0"><div class="t-title" data-edit="tasks:${esc(t.id)}:title" title="Double-clic pour renommer">${esc(t.title)}</div><div class="t-meta">${meta.join('')}</div></div>
-    <div class="t-side"><span class="xp">+${SIZE_XP[t.size] || 25} XP</span>${opts.del ? `<button class="del" type="button" data-act="del" data-c="tasks" data-id="${esc(t.id)}" aria-label="Supprimer">✕</button>` : ''}</div>
+    <div class="t-side">${opts.del ? `<button class="del" type="button" data-act="del" data-c="tasks" data-id="${esc(t.id)}" aria-label="Supprimer">✕</button>` : ''}</div>
   </div>`;
 }
 const emptyBox = (h) => `<div class="empty">${h}</div>`;
@@ -836,14 +904,15 @@ const FILL = {
 
     // Indicateurs
     const T = C.T, ci = T.findIndex((a) => C.mrr < a), next = ci === -1 ? null : T[ci], prev = ci > 0 ? T[ci - 1] : 0;
-    const me = S.handle && S.handle !== 'duo' ? S.handle : null;
-    const lv = levelOf(me ? C.xp[me] : C.xp.team);
-    const q = Math.min(C.today.n, DAILY_GOAL);
+    const doingN = C.open.filter((t) => t.status === 'doing').length;
+    const taskSub = [doingN ? `<b>${doingN}</b> en cours` : '', C.late.length ? `<b class="r">${C.late.length}</b> en retard` : ''].filter(Boolean).join(' · ') || (C.open.length ? 'Rien en retard' : 'Tout est traité');
+    const W = C.week, wOpen = W.items.filter((i) => !i.done).length, tk = todayKey();
+    const wList = W.items.slice(0, 3).map((i) => { const dd = parseDay(i.date); return `<li class="${i.done ? 'done' : ''} ${i.date === tk ? 'today' : ''}"><span class="d">${i.date === tk ? 'Auj.' : DAYS_SHORT[dd.getDay()]}</span><span class="t">${i.kind === 'jalon' ? '◆ ' : ''}${esc(i.title)}</span></li>`; }).join('');
     $('#ck-stats').innerHTML = `
       <a class="stat" href="#produits"><span class="k">Revenu mensuel</span><span class="v num">${eur(C.mrr).replace(' €', '')}<small>€ / mois</small></span><span class="s">${next ? `<b>${eur(next - C.mrr)}</b> avant ${TIER_NAMES[ci]}` : 'Tous les paliers atteints'}</span></a>
-      <div class="stat"><span class="k">${me ? 'Votre niveau' : 'Niveau d\'équipe'}</span><div class="stat-ring">${ring(lv.cur / lv.span, 76, 7, lv.L)}<div><div style="font-size:18px;font-weight:700;letter-spacing:-.02em">${lv.rank}</div><span class="s num">${Math.round(lv.span - lv.cur)} XP avant niv. ${lv.L + 1}</span></div></div></div>
-      <div class="stat"><span class="k">Quête du jour</span><div class="stat-ring">${ring(q / DAILY_GOAL, 76, 7, q + '/' + DAILY_GOAL)}<div><div style="font-size:18px;font-weight:700;letter-spacing:-.02em">${q >= DAILY_GOAL ? 'Accomplie' : DAILY_GOAL + ' missions'}</div><span class="s">${q >= DAILY_GOAL ? '+' + XP_DAILY + ' XP gagnés' : '+' + XP_DAILY + ' XP de bonus'}</span></div></div></div>
-      <div class="stat"><span class="k">Série</span><span class="v num">${C.streak}<small>${C.streak > 1 ? 'jours' : 'jour'}</small></span><span class="s">${C.streak ? 'Ne cassez pas la chaîne' : 'Cochez une mission pour la lancer'}</span></div>`;
+      <a class="stat" href="#produits"><span class="k">Nombre de clients</span><span class="v num">${C.clients}<small>${C.clients > 1 ? 'clients' : 'client'}</small></span><span class="s">${C.clients ? `<b>${C.recClients}</b> en récurrent` : 'Premier contrat à closer'}</span></a>
+      <a class="stat" href="#todo"><span class="k">Tâches à traiter</span><span class="v num">${C.open.length}<small>${C.open.length > 1 ? 'tâches' : 'tâche'}</small></span><span class="s">${taskSub}</span></a>
+      <a class="stat week" href="#planning"><span class="k">Plan de la semaine <span class="faint num">· S${W.n}</span></span>${W.items.length ? `<ul class="wk">${wList}</ul>` : '<span class="wk-none">Rien de planifié cette semaine.</span>'}<span class="s">${W.items.length ? `<b>${wOpen}</b> sur ${plural(W.items.length, 'échéance')} à tenir${W.items.length > 3 ? ' · tout voir' : ''}` : 'Ajoutez une échéance à une mission'}</span></a>`;
 
     // Route du MRR
     const pos = next ? (ci + clamp((C.mrr - prev) / (next - prev), 0, 1)) / T.length : 1;
@@ -863,26 +932,39 @@ const FILL = {
     // Équipage
     const last14 = []; for (let i = 13; i >= 0; i--) { const x = new Date(); x.setDate(x.getDate() - i); last14.push(dayKey(x.getTime())); }
     const pilot = (h) => {
-      const l = levelOf(C.xp[h]);
+      const mine = S.tasks.filter((t) => t.owner === h), mDone = mine.filter((t) => t.status === 'done').length;
+      const doneBy = C.done.filter((t) => (t.doneBy || t.owner) === h).length;
       const counts = last14.map((k) => (C.perDay[k] ? C.perDay[k][h] : 0)), max = Math.max(1, ...counts);
-      return `<div class="pilot">${ring(l.cur / l.span, 64, 5, l.L, null, h === 'romain')}
-        <div class="info"><div class="name">${esc(NAMES[h])}${S.handle === h ? '<small>vous</small>' : ''}</div><div class="rank">${l.rank} · <span class="num">${Math.round(C.xp[h])} XP</span></div>
+      return `<div class="pilot">${ring(mine.length ? mDone / mine.length : 0, 64, 5, mine.length - mDone, null, h === 'romain')}
+        <div class="info"><div class="name">${esc(NAMES[h])}${S.handle === h ? '<small>vous</small>' : ''}</div><div class="rank"><span class="num">${mine.length - mDone}</span> à traiter · <span class="num">${doneBy}</span> ${doneBy > 1 ? 'faites' : 'faite'}</div>
         <div class="bars" title="Missions faites, 14 derniers jours">${counts.map((n, i) => `<i class="${n ? 'on' : ''} ${i === 13 && n ? 'today' : ''}" style="height:${Math.max(14, n / max * 100)}%"></i>`).join('')}</div></div></div>`;
     };
     $('#ck-duo').innerHTML = pilot('romain') + pilot('pa');
-    $('#ck-team').textContent = 'Équipe niv. ' + levelOf(C.xp.team).L;
+    const wkDone = last14.slice(7).reduce((s, k) => s + (C.perDay[k] ? C.perDay[k].n : 0), 0);
+    $('#ck-team').textContent = plural(wkDone, 'mission') + ' en 7 jours';
 
     // Succès
-    $('#ck-bcount').textContent = C.badges.filter((b) => b[3]).length + ' sur ' + C.badges.length;
-    $('#ck-medals').innerHTML = C.badges.map(([g, n, dsc, ok]) => `<div class="medal ${ok ? 'won' : ''}" title="${esc(dsc)}"><span class="m">${g}</span><span><b>${n}</b><small>${dsc}</small></span></div>`).join('');
+    const V = C.victories, vWon = V.filter((v) => v.won).length;
+    $('#ck-bcount').textContent = V.length ? vWon + ' sur ' + V.length : '';
+    $('#ck-vics').innerHTML = V.length ? V.map((v, i) => {
+      const auto = v.rule === 'mrr' ? 'Se débloque à ' + eur(v.target) + ' de MRR' : v.rule === 'clients' ? 'Se débloque au ' + (num(v.target) > 1 ? num(v.target) + 'e client' : 'premier client') : '';
+      const meta = v.won ? 'Débloquée' + (v.doneAt ? ' ' + relTime(v.doneAt) : '') + (v.doneBy && v.doneBy !== 'duo' ? ' par ' + esc(NAMES[v.doneBy]) : '') : auto;
+      return `<div class="vic ${v.won ? 'won' : ''}">
+        <button class="vic-n num" type="button" data-act="vic-toggle" data-id="${esc(v.id)}" aria-label="${v.won ? 'Rouvrir la victoire' : 'Victoire obtenue'}" title="${v.won ? 'Rouvrir' : 'Cocher la victoire'}">${v.won ? '✓' : pad(i + 1)}</button>
+        <div style="min-width:0"><h3 data-edit="victories:${esc(v.id)}:title" title="Double-clic pour renommer">${esc(v.title)}</h3>${meta ? `<p class="vic-meta">${meta}</p>` : ''}</div>
+        <div class="vic-reward"><span class="lbl">${v.won ? 'Récompense débloquée' : 'Récompense'}</span><b data-edit="victories:${esc(v.id)}:reward" title="Double-clic pour modifier">${esc(v.reward || 'À définir')}</b></div>
+        <button class="del" type="button" data-act="del" data-c="victories" data-id="${esc(v.id)}" aria-label="Supprimer">✕</button>
+      </div>`;
+    }).join('') : emptyBox('Chargement des victoires…');
 
     // Journal
     const ev = [];
-    C.done.forEach((t) => ev.push({ at: t.doneAt, who: t.doneBy || t.owner, text: t.title, xp: SIZE_XP[t.size] || 25 }));
-    S.milestones.filter((m) => m.done && m.doneAt).forEach((m) => ev.push({ at: m.doneAt, who: m.doneBy, text: 'Jalon : ' + m.title, xp: XP_MILESTONE }));
-    S.revenue.filter((r) => r.createdAt).forEach((r) => ev.push({ at: r.createdAt, who: 'duo', text: (r.kind === 'ponctuel' ? 'Encaissé : ' : 'Contrat : ') + r.client + ', ' + eur(r.amount), xp: 0 }));
+    C.done.forEach((t) => ev.push({ at: t.doneAt, who: t.doneBy || t.owner, text: t.title, tag: 'Fait' }));
+    S.milestones.filter((m) => m.done && m.doneAt).forEach((m) => ev.push({ at: m.doneAt, who: m.doneBy, text: 'Jalon : ' + m.title, tag: 'Jalon' }));
+    S.revenue.filter((r) => r.createdAt).forEach((r) => ev.push({ at: r.createdAt, who: 'duo', text: (r.kind === 'ponctuel' ? 'Encaissé : ' : 'Contrat : ') + r.client + ', ' + eur(r.amount), tag: '€' }));
+    C.victories.filter((v) => v.won && v.doneAt).forEach((v) => ev.push({ at: v.doneAt, who: v.doneBy, text: 'Victoire : ' + v.title, tag: 'Victoire', hot: true }));
     ev.sort((a, b) => b.at - a.at);
-    $('#ck-log').innerHTML = ev.length ? ev.slice(0, 6).map((e) => `<li><span><b>${esc(NAMES[e.who] || 'Duo')}</b> · ${esc(e.text)}<time>${relTime(e.at)}</time></span><span class="gain">${e.xp ? '+' + e.xp + ' XP' : '€'}</span></li>`).join('') : '<li><span>Le journal se remplit à chaque mission cochée.</span></li>';
+    $('#ck-log').innerHTML = ev.length ? ev.slice(0, 6).map((e) => `<li><span><b>${esc(NAMES[e.who] || 'Duo')}</b> · ${esc(e.text)}<time>${relTime(e.at)}</time></span><span class="gain ${e.hot ? 'hot' : ''}">${e.tag}</span></li>`).join('') : '<li><span>Le journal se remplit à chaque mission cochée.</span></li>';
   },
 
   todo(C) {
@@ -914,7 +996,7 @@ const FILL = {
       html += `<div class="tl-item ${m.done ? 'is-done' : ''}">
         <button class="tick ${m.done ? 'done' : ''}" type="button" data-act="ms-toggle" data-id="${esc(m.id)}" aria-label="${m.done ? 'Rouvrir le jalon' : 'Jalon atteint'}"></button>
         <div style="min-width:0"><h3 data-edit="milestones:${esc(m.id)}:title">${esc(m.title)}</h3><p class="when">${fmtDay(m.date)} · ${m.done ? '<b>atteint' + (m.doneBy && m.doneBy !== 'duo' ? ' par ' + esc(NAMES[m.doneBy]) : '') + '</b>' : n < 0 ? '<b>en retard</b>' : when(m.date)}</p></div>
-        <div class="t-side"><span class="xp">+${XP_MILESTONE} XP</span><button class="del" type="button" data-act="del" data-c="milestones" data-id="${esc(m.id)}" aria-label="Supprimer">✕</button></div>
+        <div class="t-side"><button class="del" type="button" data-act="del" data-c="milestones" data-id="${esc(m.id)}" aria-label="Supprimer">✕</button></div>
       </div>`;
     });
     if (!nowPlaced && all.length) html += `<div class="tl-now">Aujourd'hui</div>`;
@@ -966,26 +1048,45 @@ const FILL = {
         <span class="amt num">${eur(r.amount)}${monthly ? '<span class="faint" style="font-weight:500"> / mois</span>' : ''}</span>
         ${monthly ? `<button class="switch" type="button" aria-pressed="${on}" data-act="rev-toggle" data-id="${esc(r.id)}" aria-label="Contrat actif"></button>` : '<span></span>'}
         <button class="del" type="button" data-act="del" data-c="revenue" data-id="${esc(r.id)}" aria-label="Supprimer">✕</button></div>`;
-    }).join('') : emptyBox('Aucun contrat. Le premier débloque le succès <b>Premier client</b>.');
+    }).join('') : emptyBox('Aucun contrat. Le premier débloque la victoire <b>Closer notre premier contrat</b>.');
     $('#pr-sum').innerHTML = `MRR <b style="color:var(--fg)">${eur(C.mrr)} / mois</b> · encaissé ponctuel ${eur(C.cash)} · ${plural(prods.filter((p) => p.stage === 'vente').length, 'produit')} en vente.`;
   }
 };
 
 /* ================= Interactions ================= */
-function celebrate(gain, label) {
-  const h = S.handle, before = h ? levelOf(compute().xp[h]).L : 0;
-  toast('+' + gain + ' XP', label);
-  if (!h) return;
-  setTimeout(() => { const after = levelOf(compute().xp[h]); if (after.L > before) levelUp(after.L, after.rank); }, 700);
+function celebrate(kind, label) { toast(kind, label); }
+function victoryUnlocked(v) {
+  levelUp('Victoire', v.title + (v.reward ? ' · ' + v.reward : ''), 'Récompense débloquée');
+}
+/* Victoires par défaut (créées une seule fois) et victoires automatiques (MRR, clients) */
+const vicBusy = new Set();
+function syncVictories(C) {
+  if (!S.db || !S.online || !S.canWrite || !S.cfgReady) return;
+  if (!S.victories.length && !S.config.victoriesSeeded && !vicBusy.has('seed')) {
+    vicBusy.add('seed');
+    (async () => {
+      for (let i = 0; i < DEFAULT_VICTORIES.length; i++) {
+        const [id, title, reward, rule, target] = DEFAULT_VICTORIES[i];
+        const d = { title, reward, order: i, done: false, createdAt: Date.now() };
+        if (rule) { d.rule = rule; d.target = target; }
+        if (!(await write((db) => db.doc('victories/' + id).set(d)))) return;
+      }
+      await write((db) => db.doc('config/main').set(Object.assign({}, S.config, { victoriesSeeded: true })));
+    })();
+    return;
+  }
+  C.victories.filter((v) => v.autoMet && !v.done && !vicBusy.has(v.id)).forEach((v) => {
+    vicBusy.add(v.id);
+    write((db) => db.doc('victories/' + v.id).update({ done: true, doneAt: Date.now(), doneBy: 'duo' })).then((ok) => { if (ok) victoryUnlocked(v); });
+  });
 }
 async function setTaskStatus(t, status) {
   const data = { status };
   if (status === 'done') { data.doneAt = Date.now(); data.doneBy = S.handle || (t.owner !== 'duo' ? t.owner : 'duo'); } else { data.doneAt = null; data.doneBy = null; }
   const ok = await write((db) => db.doc('tasks/' + t.id).update(data));
   if (ok && status === 'done') {
-    celebrate(SIZE_XP[t.size] || 25, t.title);
+    celebrate('Mission faite', t.title);
     Orb.pulse();
-    setTimeout(() => { if (compute().today.n === DAILY_GOAL) toast('Quête du jour', 'Accomplie, +' + XP_DAILY + ' XP'); }, 400);
   }
 }
 document.addEventListener('click', async (e) => {
@@ -1000,7 +1101,7 @@ document.addEventListener('click', async (e) => {
   if (act === 'who') {
     S.handle = el.dataset.h; ls.set('nobrayn-pilot', S.handle);
     if (S.db && S.uid && !S.db.local) write((db) => db.doc('players/' + S.uid).set({ handle: S.handle, at: Date.now() }));
-    render(); toast('Bienvenue', NAMES[S.handle] + ', votre XP est comptée à votre nom.');
+    render(); toast('Bienvenue', NAMES[S.handle] + '.');
   } else if (act === 'task-next') {
     const t = S.tasks.find((x) => x.id === id); if (!t) return;
     const st = t.status || 'todo';
@@ -1010,7 +1111,13 @@ document.addEventListener('click', async (e) => {
     const m = S.milestones.find((x) => x.id === id); if (!m) return;
     const done = !m.done;
     const ok = await write((db) => db.doc('milestones/' + id).update(done ? { done, doneAt: Date.now(), doneBy: S.handle || 'duo' } : { done, doneAt: null, doneBy: null }));
-    if (ok && done) { celebrate(XP_MILESTONE, 'Jalon : ' + m.title); Orb.pulse(); }
+    if (ok && done) { celebrate('Jalon atteint', m.title); Orb.pulse(); }
+  } else if (act === 'vic-toggle') {
+    const v = compute().victories.find((x) => x.id === id); if (!v) return;
+    if (v.won && v.autoMet) { toast('Victoire automatique', 'Elle reste acquise tant que le seuil est atteint.'); return; }
+    const done = !v.won;
+    const ok = await write((db) => db.doc('victories/' + id).update(done ? { done, doneAt: Date.now(), doneBy: S.handle || 'duo' } : { done, doneAt: null, doneBy: null }));
+    if (ok && done) { victoryUnlocked(v); Orb.pulse(); }
   } else if (act === 'del') {
     if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'Supprimer'; setTimeout(() => { if (el.isConnected) { delete el.dataset.armed; el.textContent = '✕'; } }, 2600); return; }
     write((db) => db.doc(el.dataset.c + '/' + id).delete());
@@ -1041,7 +1148,7 @@ document.addEventListener('change', (e) => {
   if (el.dataset && el.dataset.act === 'obj-progress') {
     const p = clamp(Math.round(num(el.value)), 0, 100);
     const o = S.objectives.find((x) => x.id === el.dataset.id), was = o ? o.progress || 0 : 0;
-    write((db) => db.doc('objectives/' + el.dataset.id).update({ progress: p })).then((ok) => { if (ok && p >= 100 && was < 100) { celebrate(XP_OBJECTIVE, 'Objectif atteint' + (o && o.owner && o.owner !== 'duo' ? ' par ' + NAMES[o.owner] : '')); Orb.pulse(); } });
+    write((db) => db.doc('objectives/' + el.dataset.id).update({ progress: p })).then((ok) => { if (ok && p >= 100 && was < 100) { celebrate('Objectif atteint', (o ? o.title : '') + (o && o.owner && o.owner !== 'duo' ? ' · ' + NAMES[o.owner] : '')); Orb.pulse(); } });
   }
 });
 document.addEventListener('dblclick', (e) => {
@@ -1085,6 +1192,11 @@ function closeSheet() { const s = $('.sheet-bg'); if (s) s.remove(); }
 function bindView(view) {
   const on = (sel, fn) => { const f = $(sel); if (f) f.addEventListener('submit', (e) => { e.preventDefault(); fn(); }); };
   bindAdder('f-task');
+  on('#f-vic', async () => {
+    const title = $('#vic-title').value.trim(); if (!title) return;
+    const order = S.victories.reduce((m, v) => Math.max(m, v.order ?? 0), 0) + 1;
+    if (await write((db) => db.collection('victories').add({ title, reward: $('#vic-reward').value.trim(), order, done: false, createdAt: Date.now() }))) { $('#vic-title').value = ''; $('#vic-reward').value = ''; toast('Victoire ajoutée', title); }
+  });
   on('#f-ms', async () => {
     const title = $('#m-title').value.trim(), date = $('#m-date').value; if (!title || !date) return;
     if (await write((db) => db.collection('milestones').add({ title, date, done: false, createdAt: Date.now() }))) $('#m-title').value = '';
