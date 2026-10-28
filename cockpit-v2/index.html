@@ -495,7 +495,7 @@ function compute() {
     d.n++; if (h === 'romain' || h === 'pa') d[h]++;
   });
   S.milestones.filter((m) => m.done).forEach((m) => credit(m.doneBy || 'duo', XP_MILESTONE));
-  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach(() => credit('duo', XP_OBJECTIVE));
+  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach((o) => credit(o.owner || 'duo', XP_OBJECTIVE));
   Object.values(perDay).forEach((d) => { if (d.n >= DAILY_GOAL) credit('duo', XP_DAILY); });
   const mrr = S.revenue.filter((r) => r.active !== false && r.kind !== 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
   const cash = S.revenue.filter((r) => r.kind === 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
@@ -719,6 +719,7 @@ const SKELETON = {
         <input class="in" id="o-metric" maxlength="160" placeholder="Comment on le mesure" aria-label="Mesure">
         <input class="in" id="o-date" type="date" aria-label="Horizon">
         <button class="btn red" type="submit">Ajouter</button>
+        <div class="adder-opts" style="grid-column:1 / -1; padding:4px 0 0"><span><span class="lbl">Qui s'en charge</span><span class="chips" data-pick="owner" style="display:inline-flex"><button type="button" class="chip" data-v="romain" aria-pressed="true">Romain</button><button type="button" class="chip" data-v="pa">P'A</button><button type="button" class="chip" data-v="duo">Les deux</button></span></span></div>
       </form></section>
     <section class="sec"><div class="sec-head"><h2>Paliers de MRR</h2><span class="link">en € par mois</span></div>
       <form class="form-grid" id="f-tiers" style="grid-template-columns: minmax(0,1fr) auto">
@@ -892,6 +893,7 @@ const FILL = {
       return `<article class="card"><button class="del" type="button" data-act="del" data-c="objectives" data-id="${esc(o.id)}" aria-label="Supprimer">✕</button>
         <div class="obj-top">${ring(p / 100, 84, 7, p + '%')}<div style="min-width:0"><p class="when">${o.due ? 'Horizon ' + fmtDay(o.due) : 'Sans date'}</p><h3 data-edit="objectives:${esc(o.id)}:title">${esc(o.title)}</h3></div></div>
         ${o.metric ? `<p>${esc(o.metric)}</p>` : ''}
+        <div class="chips" role="group" aria-label="Qui s'en charge">${[['romain', 'Romain'], ['pa', "P'A"], ['duo', 'Les deux']].map(([k, l]) => `<button type="button" class="chip ${k === 'pa' ? 'red' : ''}" aria-pressed="${(o.owner || 'duo') === k}" data-act="obj-owner" data-id="${esc(o.id)}" data-v="${k}">${l}</button>`).join('')}</div>
         <input type="range" min="0" max="100" step="5" value="${p}" style="--p:${p}%" data-act="obj-progress" data-id="${esc(o.id)}" id="rg-${esc(o.id)}" aria-label="Avancement de ${esc(o.title)}">
       </article>`;
     }).join('') : emptyBox('Aucun objectif. Un par horizon, chacun mesurable.');
@@ -975,6 +977,8 @@ document.addEventListener('click', async (e) => {
     if (el.dataset.s === 'vente') toast('En vitrine', 'Produit passé en vente.');
   } else if (act === 'rev-toggle') {
     const r = S.revenue.find((x) => x.id === id); if (r) write((db) => db.doc('revenue/' + id).update({ active: r.active === false }));
+  } else if (act === 'obj-owner') {
+    write((db) => db.doc('objectives/' + id).update({ owner: el.dataset.v }));
   } else if (act === 'toggle-done') {
     ls.set('nobrayn-showdone', ls.get('nobrayn-showdone') === '1' ? '0' : '1'); render();
   } else if (act === 'export') exportData();
@@ -995,7 +999,7 @@ document.addEventListener('change', (e) => {
   if (el.dataset && el.dataset.act === 'obj-progress') {
     const p = clamp(Math.round(num(el.value)), 0, 100);
     const o = S.objectives.find((x) => x.id === el.dataset.id), was = o ? o.progress || 0 : 0;
-    write((db) => db.doc('objectives/' + el.dataset.id).update({ progress: p })).then((ok) => { if (ok && p >= 100 && was < 100) { celebrate(XP_OBJECTIVE, 'Objectif atteint'); Orb.pulse(); } });
+    write((db) => db.doc('objectives/' + el.dataset.id).update({ progress: p })).then((ok) => { if (ok && p >= 100 && was < 100) { celebrate(XP_OBJECTIVE, 'Objectif atteint' + (o && o.owner && o.owner !== 'duo' ? ' par ' + NAMES[o.owner] : '')); Orb.pulse(); } });
   }
 });
 document.addEventListener('dblclick', (e) => {
@@ -1045,7 +1049,8 @@ function bindView(view) {
   });
   on('#f-obj', async () => {
     const title = $('#o-title').value.trim(); if (!title) return;
-    if (await write((db) => db.collection('objectives').add({ title, metric: $('#o-metric').value.trim(), due: $('#o-date').value || '', progress: 0, createdAt: Date.now() }))) { $('#o-title').value = ''; $('#o-metric').value = ''; }
+    const ob = $('#f-obj [data-pick="owner"] [aria-pressed="true"]');
+    if (await write((db) => db.collection('objectives').add({ title, metric: $('#o-metric').value.trim(), due: $('#o-date').value || '', owner: ob ? ob.dataset.v : 'duo', progress: 0, createdAt: Date.now() }))) { $('#o-title').value = ''; $('#o-metric').value = ''; }
   });
   on('#f-tiers', async () => {
     const uniq = Array.from(new Set($('#tiers-in').value.split(/[,;\s]+/).map(num).filter((n) => n > 0))).sort((a, b) => a - b).slice(0, 10);

@@ -529,7 +529,7 @@ function compute() {
     d.n++; if (h === 'romain' || h === 'pa') d[h]++;
   });
   S.milestones.filter((m) => m.done).forEach((m) => credit(m.doneBy || 'duo', XP_MILESTONE));
-  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach(() => credit('duo', XP_OBJECTIVE));
+  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach((o) => credit(o.owner || 'duo', XP_OBJECTIVE));
   let dailyWins = 0;
   Object.values(perDay).forEach((d) => { if (d.n >= DAILY_GOAL) { credit('duo', XP_DAILY); dailyWins++; } });
 
@@ -812,10 +812,11 @@ const SKELETON = {
     <section class="sec">
       <div class="sec-head"><h2>Objectifs</h2><span class="label">${XP_OBJECTIVE} XP à 100 %</span></div>
       <div id="ob-list"></div>
-      <form class="panel form-row" id="f-obj" style="grid-template-columns: minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) auto; margin-top:16px">
+      <form class="panel form-row" id="f-obj" style="grid-template-columns: minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto; margin-top:16px">
         <label class="field"><span>Objectif</span><input class="in" id="o-title" required maxlength="120" placeholder="Ex. 3 clients payés"></label>
         <label class="field"><span>Comment on le mesure</span><input class="in" id="o-metric" maxlength="160" placeholder="Ex. 3 factures encaissées"></label>
         <label class="field"><span>Horizon</span><input class="in" id="o-date" type="date"></label>
+        <label class="field"><span>Qui s'en charge</span><select class="in" id="o-owner"><option value="romain">Romain</option><option value="pa">P'A</option><option value="duo">Les deux</option></select></label>
         <button class="btn red" type="submit">Ajouter</button>
       </form>
     </section>
@@ -1028,7 +1029,7 @@ const FILL = {
       const p = o.progress || 0;
       return `<div class="obj ${p >= 100 ? 'won' : ''}">
         <span class="hz">${o.due ? fmtDay(o.due) : 'Sans date'}</span>
-        <div style="min-width:0"><h3 data-edit="objectives:${esc(o.id)}:title">${esc(o.title)}</h3>${o.metric ? `<p>${esc(o.metric)}</p>` : ''}</div>
+        <div style="min-width:0"><h3 data-edit="objectives:${esc(o.id)}:title">${esc(o.title)}</h3>${o.metric ? `<p>${esc(o.metric)}</p>` : ''}<select class="in" style="height:30px; width:auto; margin-top:8px; font-size:13px" data-act="obj-owner" data-id="${esc(o.id)}" id="ow-${esc(o.id)}" aria-label="Qui s'en charge">${[['romain', 'Romain'], ['pa', "P'A"], ['duo', 'Les deux']].map(([k, l]) => `<option value="${k}" ${(o.owner || 'duo') === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
         <div class="pct"><div class="pct-top"><span>${p >= 100 ? 'Atteint · +' + XP_OBJECTIVE + ' XP' : 'Avancement'}</span><span class="num">${p} %</span></div>
           <input type="range" min="0" max="100" step="5" value="${p}" data-act="obj-progress" data-id="${esc(o.id)}" id="rg-${esc(o.id)}" aria-label="Avancement de ${esc(o.title)}"></div>
         <button class="icon-btn" type="button" data-act="del" data-c="objectives" data-id="${esc(o.id)}" aria-label="Supprimer">✕</button>
@@ -1167,6 +1168,7 @@ function closeVision() { $('#ob-vedit').hidden = true; $('#ob-vtext').hidden = f
 document.addEventListener('change', (e) => {
   const el = e.target;
   if (el.id === 'importFile' && el.files && el.files[0]) { importData(el.files[0]); el.value = ''; return; }
+  if (el.dataset && el.dataset.act === 'obj-owner') { write((db) => db.doc('objectives/' + el.dataset.id).update({ owner: el.value })); return; }
   if (el.dataset && el.dataset.act === 'obj-progress') {
     const p = clamp(Math.round(num(el.value)), 0, 100);
     const o = S.objectives.find((x) => x.id === el.dataset.id);
@@ -1211,7 +1213,7 @@ function bindView(view) {
   });
   on('#f-obj', async () => {
     const title = $('#o-title').value.trim(); if (!title) return;
-    const ok = await write((db) => db.collection('objectives').add({ title, metric: $('#o-metric').value.trim(), due: $('#o-date').value || '', progress: 0, createdAt: Date.now() }));
+    const ok = await write((db) => db.collection('objectives').add({ title, metric: $('#o-metric').value.trim(), due: $('#o-date').value || '', owner: $('#o-owner').value, progress: 0, createdAt: Date.now() }));
     if (ok) { $('#o-title').value = ''; $('#o-metric').value = ''; }
   });
   on('#f-tiers', async () => {
