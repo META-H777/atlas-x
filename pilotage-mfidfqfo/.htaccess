@@ -1,0 +1,13 @@
+# Cockpit Nobrayn : accès privé (connexion gérée par index.php)
+Options -Indexes
+DirectoryIndex index.php
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+</IfModule>
+# Seuls index.php et api.php sont accessibles ; le reste est lu par PHP
+<FilesMatch "\.(html|js|json|md|txt|log|lock|tmp)$">
+  Require all denied
+</FilesMatch>
+<Files "lib.php">
+  Require all denied
+</Files>

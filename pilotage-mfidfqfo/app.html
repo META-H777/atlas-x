@@ -1,0 +1,1275 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../nobrain/favicon.svg"></head><body><title>Cockpit Nobrayn</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { if (localStorage.getItem('nobrayn-cockpit-theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}</script>
+<style>
+/* Layout : une seule colonne aérée, des surfaces douces sans traits, un hero 3D vivant.
+   Thème sombre assumé (esprit Tech-OS), un seul accent : le rouge Nobrayn. */
+:root {
+  --bg: #08080b;
+  --surface: rgb(var(--ink-rgb) / .035);
+  --surface-2: rgb(var(--ink-rgb) / .065);
+  --surface-3: rgb(var(--ink-rgb) / .1);
+  --ink-rgb: 255 255 255;
+  --fg-rgb: 243 242 238;
+  --fg: #f3f2ee;
+  --fg-2: rgb(var(--fg-rgb) / .64);
+  --fg-3: rgb(var(--fg-rgb) / .38);
+  --top-bg: rgba(8, 8, 11, .72);
+  --solid: #121217;
+  --dot-bg: #1b1b21;
+  --toast-bg: rgba(28, 28, 34, .92);
+  --scrim: rgba(4, 4, 6, .6);
+  --shadow: rgba(0, 0, 0, .5);
+  --title-glint: #ffb3aa;
+  --red: #ff3326;
+  --red-2: #ff7a6e;
+  --red-rgb: 255 51 38;
+  --ink-on-red: #120303;
+
+  --sans: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --r-sm: 12px; --r-md: 18px; --r-lg: 26px;
+  --max: 1160px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  color-scheme: dark;
+}
+/* Thème clair (au choix, mémorisé par navigateur) : papier Nobrayn, encre noire, même rouge */
+:root[data-theme="light"] {
+  --bg: #f3f2ee;
+  --ink-rgb: 12 12 16;
+  --fg-rgb: 14 14 18;
+  --surface: rgba(12, 12, 16, .04);
+  --surface-2: rgba(12, 12, 16, .07);
+  --surface-3: rgba(12, 12, 16, .11);
+  --fg: #0e0e12;
+  --red: #e30613;
+  --red-2: #c4050f;
+  --red-rgb: 227 6 19;
+  --ink-on-red: #ffffff;
+  --top-bg: rgba(243, 242, 238, .78);
+  --solid: #fbfaf7;
+  --dot-bg: #e4e2dc;
+  --toast-bg: rgba(255, 255, 255, .94);
+  --scrim: rgba(30, 30, 34, .28);
+  --shadow: rgba(20, 20, 30, .14);
+  --title-glint: var(--red);
+  color-scheme: light;
+}
+:root[data-theme="light"] .btn.red:hover { background: #c4050f; }
+:root[data-theme="light"] .lvlup { background: radial-gradient(circle, rgb(var(--red-rgb) / .18), rgba(243, 242, 238, .9) 60%); }
+:root[data-theme="light"] .gyro i:nth-child(1) { border-color: rgba(14, 14, 18, .45); }
+.theme-btn { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--fg-2); flex: none; transition: background .25s, color .25s, transform .4s var(--ease); }
+.theme-btn:hover { background: var(--surface-2); color: var(--fg); transform: rotate(20deg); }
+.theme-btn svg { width: 17px; height: 17px; }
+.theme-btn .sun { display: none; }
+:root[data-theme="light"] .theme-btn .sun { display: block; }
+:root[data-theme="light"] .theme-btn .moon { display: none; }
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 400 16px/1.5 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bg); }
+/* Aurore : deux halos rouges très doux, figés */
+.aurora { position: fixed; inset: -20vh -20vw; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(45vw 40vh at 78% 12%, rgb(var(--red-rgb) / .13), transparent 70%),
+    radial-gradient(40vw 45vh at 8% 92%, rgb(var(--red-rgb) / .06), transparent 70%),
+    radial-gradient(30vw 30vh at 40% 40%, rgb(var(--ink-rgb) / .025), transparent 70%);
+}
+h1, h2, h3, p, ul { margin: 0; padding: 0; }
+ul { list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--red); color: var(--ink-on-red); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 8px; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { width: 100%; max-width: var(--max); margin-inline: auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 500 12px/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--fg-3); }
+.muted { color: var(--fg-2); }
+.faint { color: var(--fg-3); }
+em.r, .r { color: var(--red); font-style: normal; }
+
+/* ---------- Barre du haut ---------- */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--top-bg); backdrop-filter: blur(18px) saturate(1.3); -webkit-backdrop-filter: blur(18px) saturate(1.3); }
+.top-row { display: flex; align-items: center; gap: 20px; height: 68px; }
+.logo { font-weight: 800; font-size: 23px; letter-spacing: -.055em; line-height: 1; white-space: nowrap; }
+.logo s { text-decoration: none; position: relative; }
+.logo s::after { content: ""; position: absolute; left: -3%; right: -3%; top: 54%; height: .11em; background: var(--red); border-radius: 2px; }
+.logo i { font-style: normal; color: var(--red); }
+.pills { display: flex; gap: 4px; padding: 4px; background: var(--surface); border-radius: 999px; margin-inline: auto; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.pills::-webkit-scrollbar { display: none; }
+.pill { padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--fg-2); white-space: nowrap; transition: color .25s, background .25s; }
+.pill:hover { color: var(--fg); }
+.pill[aria-current="page"] { background: var(--surface-3); color: var(--fg); }
+.me { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); position: relative; flex: none; }
+.live-dot::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid var(--red); animation: ring 2.2s var(--ease) infinite; }
+@keyframes ring { from { transform: scale(.5); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
+.clock { font: 500 13px var(--mono); color: var(--fg-2); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 600 12px var(--sans); background: var(--fg); color: var(--bg); flex: none; }
+.avatar.pa { background: var(--red); color: var(--ink-on-red); }
+.avatar.sm { width: 26px; height: 26px; font-size: 10px; }
+.who { display: inline-flex; align-items: center; gap: 8px; padding: 3px 12px 3px 3px; border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 500; }
+.who:hover { background: var(--surface-2); }
+
+/* Bandeaux discrets */
+.notice { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 14px 18px; border-radius: var(--r-md); background: var(--surface); font-size: 14px; }
+.notice p { margin-right: auto; }
+
+/* ---------- Boutons, champs ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; font-size: 15px; font-weight: 600; background: var(--surface-2); transition: background .25s, transform .15s, box-shadow .25s; }
+.btn:hover { background: var(--surface-3); }
+.btn:active { transform: scale(.97); }
+.btn.red { background: var(--red); color: var(--ink-on-red); box-shadow: 0 8px 28px rgb(var(--red-rgb) / .28); }
+.btn.red:hover { background: #ff4a3e; box-shadow: 0 10px 34px rgb(var(--red-rgb) / .4); }
+.btn.ghost { background: transparent; color: var(--fg-2); }
+.btn.ghost:hover { color: var(--fg); background: var(--surface); }
+.btn.sm { height: 34px; padding: 0 14px; font-size: 13px; }
+.btn[disabled] { opacity: .4; pointer-events: none; }
+.in { height: 46px; padding: 0 16px; border-radius: var(--r-sm); background: var(--surface); border: 1px solid transparent; min-width: 0; width: 100%; transition: border-color .2s, background .2s; }
+.in:focus { outline: none; border-color: rgb(var(--red-rgb) / .6); background: var(--surface-2); }
+.in::placeholder { color: var(--fg-3); }
+select.in { appearance: none; padding-right: 34px; background-image: linear-gradient(45deg, transparent 50%, var(--fg-3) 50%), linear-gradient(135deg, var(--fg-3) 50%, transparent 50%); background-position: calc(100% - 19px) 20px, calc(100% - 14px) 20px; background-size: 5px 5px; background-repeat: no-repeat; }
+select.in option { background: var(--solid); }
+textarea.in { height: auto; padding: 14px 16px; resize: vertical; line-height: 1.45; }
+input[type="date"].in { color-scheme: dark; }
+.field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.field > span { font-size: 13px; color: var(--fg-3); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--fg-2); background: var(--surface); transition: background .2s, color .2s; }
+.chip:hover { color: var(--fg); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.chip.red[aria-pressed="true"] { background: var(--red); color: var(--ink-on-red); }
+
+/* ---------- Vues ---------- */
+main { padding-block: 8px 72px; min-height: 70vh; }
+.view > * { animation: rise .6s var(--ease) both; }
+.view > *:nth-child(2) { animation-delay: .05s; } .view > *:nth-child(3) { animation-delay: .1s; } .view > *:nth-child(4) { animation-delay: .15s; } .view > *:nth-child(5) { animation-delay: .2s; } .view > *:nth-child(6) { animation-delay: .25s; }
+@keyframes rise { from { opacity: .001; transform: translateY(14px); } }
+.sec { margin-top: 72px; }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.sec-head h2 { font-size: 26px; font-weight: 700; letter-spacing: -.03em; }
+.sec-head a, .sec-head .link { font-size: 14px; color: var(--fg-2); }
+.sec-head a:hover { color: var(--fg); }
+.page-title { padding-top: 48px; }
+.page-title h1 { font-size: clamp(44px, 7vw, 84px); font-weight: 800; letter-spacing: -.055em; line-height: .95; }
+.page-title h1 i { font-style: normal; color: var(--red); }
+.page-title p { margin-top: 14px; font-size: 18px; color: var(--fg-2); max-width: 56ch; }
+.empty { padding: 28px; border-radius: var(--r-md); background: var(--surface); color: var(--fg-2); text-align: center; }
+.empty b { color: var(--fg); font-weight: 600; }
+
+/* ---------- Hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: 24px; min-height: 460px; }
+.hero h1 { font-size: clamp(46px, 7.2vw, 92px); font-weight: 800; letter-spacing: -.06em; line-height: .92; margin-top: 18px; text-wrap: balance; }
+.hero h1 em { font-style: normal; color: var(--red); }
+.hero .lead { margin-top: 22px; font-size: clamp(17px, 1.6vw, 20px); color: var(--fg-2); max-width: 34ch; line-height: 1.45; }
+.hero .lead b { color: var(--fg); font-weight: 600; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.orb { position: relative; height: clamp(320px, 42vw, 500px); }
+.orb canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.orb-legend { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); display: flex; gap: 18px; font-size: 13px; color: var(--fg-2); white-space: nowrap; }
+.orb-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.orb-legend i { width: 7px; height: 7px; border-radius: 50%; background: var(--fg); }
+.orb-legend i.red { background: var(--red); box-shadow: 0 0 10px var(--red); }
+/* Repli CSS si WebGL indisponible */
+.gyro { position: absolute; left: 50%; top: 46%; width: 180px; height: 180px; margin: -90px 0 0 -90px; perspective: 600px; }
+.gyro i { position: absolute; inset: 0; border-radius: 50%; border: 5px solid rgb(var(--fg-rgb) / .5); }
+.gyro i:nth-child(1) { animation: gy 6s linear infinite; }
+.gyro i:nth-child(2) { inset: 14px; border-color: var(--red); animation: gx 8s linear infinite; }
+.gyro b { position: absolute; inset: 34%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9a8e, var(--red) 55%, #6e0a05); box-shadow: 0 0 60px rgb(var(--red-rgb) / .6); }
+@keyframes gy { to { transform: rotateY(360deg) rotateZ(20deg); } }
+@keyframes gx { from { transform: rotateX(70deg); } to { transform: rotateX(70deg) rotateZ(360deg) rotateY(360deg); } }
+.orb.has-3d .gyro { display: none; }
+
+/* ---------- Indicateurs ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.stat { padding: 24px; border-radius: var(--r-lg); background: var(--surface); display: flex; flex-direction: column; gap: 14px; min-width: 0; transition: background .3s, transform .3s var(--ease); }
+a.stat:hover { background: var(--surface-2); transform: translateY(-2px); }
+.stat .k { font-size: 14px; color: var(--fg-2); }
+.stat .v { font-size: 44px; font-weight: 800; letter-spacing: -.05em; line-height: 1; }
+.stat .v small { font-size: 16px; font-weight: 500; letter-spacing: -.01em; color: var(--fg-3); margin-left: 4px; }
+.stat .s { font-size: 14px; color: var(--fg-3); }
+.stat .s b { color: var(--fg-2); font-weight: 600; }
+.stat-ring { display: flex; align-items: center; gap: 16px; }
+.ring { flex: none; display: block; }
+.ring .track { stroke: rgb(var(--ink-rgb) / .08); }
+.ring .bar { stroke: var(--red); stroke-linecap: round; transition: stroke-dashoffset 1.2s var(--ease); filter: drop-shadow(0 0 6px rgb(var(--red-rgb) / .55)); }
+.ring .bar.white { stroke: var(--fg); filter: none; }
+.ring text { fill: var(--fg); font-family: var(--sans); font-weight: 800; letter-spacing: -.04em; }
+.ring text.sub { fill: var(--fg-3); font-weight: 500; letter-spacing: 0; }
+
+/* ---------- Route du MRR ---------- */
+.route { position: relative; padding: 34px 28px 28px; border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+.route-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.route .big { font-size: clamp(56px, 9vw, 112px); font-weight: 800; letter-spacing: -.065em; line-height: .85; }
+.route .big small { font-size: .22em; font-weight: 500; color: var(--fg-3); letter-spacing: -.01em; margin-left: 8px; }
+.route .next { text-align: right; max-width: 340px; font-size: 17px; color: var(--fg-2); line-height: 1.4; }
+.route .next b { color: var(--fg); font-weight: 600; }
+.route .next em { font-style: normal; color: var(--red); font-weight: 700; }
+.path-wrap { overflow-x: auto; margin: 40px -28px 0; padding: 0 28px 4px; scrollbar-width: none; }
+.path-wrap::-webkit-scrollbar { display: none; }
+.path { position: relative; min-width: 720px; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding-top: 6px; }
+.path::before { content: ""; position: absolute; left: 0; right: 0; top: 16px; height: 3px; border-radius: 3px; background: rgb(var(--ink-rgb) / .07); }
+.path .fill { position: absolute; left: 0; top: 16px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, rgb(var(--red-rgb) / .3), var(--red)); box-shadow: 0 0 14px rgb(var(--red-rgb) / .6); transition: width 1.4s var(--ease); }
+.node { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.node .dot { width: 23px; height: 23px; border-radius: 50%; background: var(--dot-bg); box-shadow: inset 0 0 0 2px rgb(var(--ink-rgb) / .14); display: grid; place-items: center; position: relative; z-index: 1; transition: background .4s, box-shadow .4s; }
+.node.won .dot { background: var(--red); box-shadow: 0 0 0 5px rgb(var(--red-rgb) / .16), 0 0 18px rgb(var(--red-rgb) / .7); }
+.node.won .dot::after { content: ""; width: 7px; height: 4px; border: 2px solid var(--ink-on-red); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.node.cur .dot { box-shadow: inset 0 0 0 2px var(--red); }
+.node.cur .dot::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid var(--red); animation: ring 2s var(--ease) infinite; }
+.node .amt { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.node .nm { font-size: 12px; color: var(--fg-3); }
+.node.won .nm { color: var(--red-2); }
+.node.cur .nm { color: var(--fg); }
+
+/* ---------- Listes de missions ---------- */
+.list { display: flex; flex-direction: column; gap: 4px; }
+.task { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 14px 16px; border-radius: var(--r-md); transition: background .25s; }
+.task:hover { background: var(--surface); }
+.tick { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgb(var(--ink-rgb) / .22); display: grid; place-items: center; flex: none; transition: box-shadow .2s, background .25s, transform .2s var(--ease); }
+.tick:hover { box-shadow: inset 0 0 0 2px var(--red); transform: scale(1.08); }
+.tick.doing { box-shadow: inset 0 0 0 2px var(--red); }
+.tick.doing::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--red); animation: breathe 1.8s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(.55); opacity: .5; } }
+.tick.done { background: var(--red); box-shadow: 0 0 16px rgb(var(--red-rgb) / .5); }
+.tick.done::after { content: ""; width: 10px; height: 5px; border: 2px solid var(--ink-on-red); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.tick.pop { animation: pop .5s var(--ease); }
+@keyframes pop { 40% { transform: scale(1.35); } }
+.t-title { font-size: 16px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+.task.is-done .t-title { color: var(--fg-3); text-decoration: line-through; text-decoration-color: rgb(var(--red-rgb) / .7); }
+.t-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 3px; font-size: 13px; color: var(--fg-3); }
+.t-meta .late { color: var(--red-2); }
+.t-meta .who-tag { color: var(--fg-2); }
+.t-side { display: flex; align-items: center; gap: 6px; }
+.xp { font: 500 12px var(--mono); color: var(--fg-3); padding: 4px 9px; border-radius: 999px; background: var(--surface); white-space: nowrap; }
+.task:hover .xp { color: var(--fg-2); }
+.del { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--fg-3); opacity: 0; transition: opacity .2s, background .2s, color .2s; font-size: 14px; }
+.task:hover .del, .del:focus-visible, .card:hover .del, tr:hover .del { opacity: 1; }
+.del:hover { background: var(--surface-2); color: var(--fg); }
+.del[data-armed] { opacity: 1; width: auto; padding: 0 12px; border-radius: 999px; background: var(--red); color: var(--ink-on-red); font-size: 12px; font-weight: 600; }
+@media (hover: none) { .del { opacity: .7; } }
+.edit-in { width: 100%; height: 34px; padding: 0 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid rgb(var(--red-rgb) / .6); font-size: 16px; }
+.group-title { display: flex; align-items: baseline; gap: 10px; margin: 34px 16px 10px; font-size: 14px; color: var(--fg-3); }
+.group-title b { color: var(--fg); font-size: 18px; font-weight: 700; letter-spacing: -.02em; }
+.more { margin: 6px 16px; font-size: 14px; color: var(--fg-2); }
+.more:hover { color: var(--fg); }
+
+/* ---------- Duo ---------- */
+.two { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; }
+.duo { display: flex; flex-direction: column; gap: 14px; }
+.pilot { display: flex; align-items: center; gap: 18px; padding: 18px 20px; border-radius: var(--r-lg); background: var(--surface); }
+.pilot .info { min-width: 0; flex: 1; }
+.pilot .name { font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
+.pilot .name small { font-size: 12px; font-weight: 500; color: var(--red-2); margin-left: 6px; letter-spacing: 0; }
+.pilot .rank { font-size: 14px; color: var(--fg-2); }
+.pilot .bars { display: flex; align-items: flex-end; gap: 3px; height: 22px; margin-top: 10px; }
+.pilot .bars i { flex: 1; border-radius: 2px; background: rgb(var(--ink-rgb) / .08); min-height: 3px; }
+.pilot .bars i.on { background: rgb(var(--fg-rgb) / .7); }
+.pilot .bars i.today { background: var(--red); }
+.pilot .xpt { font-size: 13px; color: var(--fg-3); margin-top: 6px; }
+
+/* ---------- Journal, succès ---------- */
+.journal li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 12px 16px; font-size: 15px; color: var(--fg-2); }
+.journal li b { color: var(--fg); font-weight: 600; }
+.journal time { display: block; font-size: 12px; color: var(--fg-3); margin-top: 2px; }
+.journal .gain { font: 500 13px var(--mono); color: var(--red-2); white-space: nowrap; }
+.medals { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 22px 12px; }
+.medal { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; color: var(--fg-3); }
+.medal .m { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font: 600 15px var(--mono); background: var(--surface); box-shadow: inset 0 0 0 1.5px rgb(var(--ink-rgb) / .08); transition: transform .3s var(--ease); }
+.medal b { display: block; font-size: 14px; font-weight: 600; line-height: 1.2; }
+.medal small { display: block; font-size: 12px; line-height: 1.3; margin-top: 2px; }
+.medal.won { color: var(--fg); }
+.medal.won .m { background: radial-gradient(circle at 35% 30%, #ff8f84, var(--red) 60%, #a3140b); color: var(--ink-on-red); box-shadow: 0 0 0 6px rgb(var(--red-rgb) / .1), 0 10px 30px rgb(var(--red-rgb) / .35); }
+.medal.won:hover .m { transform: rotate(-8deg) scale(1.06); }
+.medal.won small { color: var(--fg-3); }
+
+/* ---------- Ajout rapide ---------- */
+.adder { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 10px; border-radius: var(--r-lg); background: var(--surface); }
+.adder .in { background: transparent; height: 50px; font-size: 17px; }
+.adder .in:focus { background: var(--surface); border-color: transparent; }
+.adder-opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; padding: 4px 8px 6px; }
+.adder-opts .lbl { font-size: 13px; color: var(--fg-3); margin-right: 6px; }
+.adder-opts .in { width: auto; height: 36px; font-size: 14px; background: var(--surface); }
+
+/* ---------- Planning ---------- */
+.timeline { position: relative; margin-top: 12px; padding-left: 34px; }
+.timeline::before { content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; border-radius: 2px; background: linear-gradient(rgb(var(--red-rgb) / .7), rgb(var(--ink-rgb) / .06) var(--tl-fill, 0%)); }
+.tl-month { margin: 34px 0 8px -34px; padding-left: 34px; font-size: 14px; color: var(--fg-3); }
+.tl-month:first-child { margin-top: 0; }
+.tl-item { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--r-md); transition: background .25s; }
+.tl-item:hover { background: var(--surface); }
+.tl-item .tick { position: absolute; left: -36px; top: 50%; margin-top: -13px; background: var(--bg); }
+.tl-item .tick.done { background: var(--red); }
+.tl-item h3 { font-size: 18px; font-weight: 600; letter-spacing: -.015em; }
+.tl-item.is-done h3 { color: var(--fg-2); }
+.tl-item .when { font-size: 14px; color: var(--fg-3); margin-top: 2px; }
+.tl-item .when b { color: var(--red-2); font-weight: 500; }
+.tl-now { position: relative; display: flex; align-items: center; gap: 12px; margin: 14px 0 14px -34px; font-size: 13px; font-weight: 600; color: var(--red); }
+.tl-now::before { content: ""; width: 24px; height: 24px; border-radius: 50%; background: rgb(var(--red-rgb) / .15); box-shadow: inset 0 0 0 7px var(--bg), inset 0 0 0 12px var(--red); }
+.tl-now::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgb(var(--red-rgb) / .5), transparent); }
+
+/* ---------- Vision, objectifs ---------- */
+.vision { position: relative; padding: 64px 0 24px; }
+.vision blockquote { margin: 18px 0 0; font-size: clamp(30px, 4.6vw, 58px); font-weight: 700; letter-spacing: -.045em; line-height: 1.04; max-width: 20ch; text-wrap: balance;
+  background: linear-gradient(100deg, var(--fg) 40%, var(--title-glint)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { position: relative; padding: 26px; border-radius: var(--r-lg); background: var(--surface); display: flex; flex-direction: column; gap: 16px; min-width: 0; transition: background .3s; }
+.card:hover { background: var(--surface-2); }
+.card .del { position: absolute; top: 14px; right: 14px; }
+.card h3 { font-size: 20px; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; padding-right: 26px; overflow-wrap: anywhere; }
+.card p { font-size: 14px; color: var(--fg-2); }
+.card .when { font-size: 13px; color: var(--fg-3); }
+.obj-top { display: flex; align-items: center; gap: 18px; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--red) var(--p, 0%), rgb(var(--ink-rgb) / .1) var(--p, 0%)); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; margin-top: -7px; background: var(--fg); box-shadow: 0 2px 10px rgba(0, 0, 0, .5); }
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 4px; background: rgb(var(--ink-rgb) / .1); }
+input[type="range"]::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--red); }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: var(--fg); }
+
+/* ---------- Produits ---------- */
+.price { font-size: 34px; font-weight: 800; letter-spacing: -.045em; line-height: 1; }
+.price small { font-size: 14px; font-weight: 500; color: var(--fg-3); letter-spacing: 0; }
+.kind { font-size: 13px; color: var(--fg-3); }
+.kind.rec { color: var(--red-2); }
+.stepper { display: flex; align-items: center; gap: 0; }
+.stepper button { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg-3); padding: 6px 0; }
+.stepper button i { width: 12px; height: 12px; border-radius: 50%; background: rgb(var(--ink-rgb) / .12); transition: background .3s, box-shadow .3s; }
+.stepper button.on { color: var(--fg); }
+.stepper button.on i { background: var(--fg); }
+.stepper button.on.sell i { background: var(--red); box-shadow: 0 0 12px rgb(var(--red-rgb) / .8); }
+.stepper .sep { flex: 1; min-width: 14px; height: 2px; margin: 0 8px; border-radius: 2px; background: rgb(var(--ink-rgb) / .08); }
+.stepper .sep.on { background: rgb(var(--fg-rgb) / .5); }
+.card .foot { display: flex; justify-content: space-between; font-size: 13px; color: var(--fg-3); margin-top: auto; }
+.contracts { display: flex; flex-direction: column; gap: 4px; }
+.contract { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 16px; padding: 14px 16px; border-radius: var(--r-md); transition: background .25s; }
+.contract:hover { background: var(--surface); }
+.contract b { font-weight: 600; }
+.contract .sub { font-size: 13px; color: var(--fg-3); }
+.contract .amt { font-weight: 700; letter-spacing: -.02em; white-space: nowrap; }
+.contract.off { opacity: .45; }
+.switch { width: 42px; height: 24px; border-radius: 999px; background: rgb(var(--ink-rgb) / .12); position: relative; transition: background .25s; flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--fg); transition: transform .3s var(--ease); }
+.switch[aria-pressed="true"] { background: var(--red); }
+.switch[aria-pressed="true"]::after { transform: translateX(18px); }
+.form-grid { display: grid; gap: 12px; align-items: end; }
+
+/* ---------- Feuille d'ajout (modale) ---------- */
+.sheet-bg { position: fixed; inset: 0; z-index: 70; background: var(--scrim); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; animation: fadeIn .25s var(--ease); }
+.sheet { width: min(560px, 100%); padding: 28px; border-radius: var(--r-lg); background: var(--solid); box-shadow: 0 30px 80px var(--shadow); display: flex; flex-direction: column; gap: 18px; animation: rise .4s var(--ease); }
+.sheet h2 { font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+@keyframes fadeIn { from { opacity: 0; } }
+
+/* ---------- Toasts, passage de niveau ---------- */
+.toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); z-index: 80; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: max-content; max-width: 92vw; }
+.toast { display: flex; gap: 12px; align-items: center; padding: 12px 20px 12px 12px; border-radius: 999px; background: var(--toast-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 14px 40px var(--shadow); font-size: 14px; animation: toastIn .45s var(--ease); }
+.toast b { padding: 5px 11px; border-radius: 999px; background: var(--red); color: var(--ink-on-red); font: 600 12px var(--mono); white-space: nowrap; }
+.toast.out { animation: toastOut .4s var(--ease) forwards; }
+@keyframes toastIn { from { transform: translateY(16px) scale(.96); opacity: 0; } }
+@keyframes toastOut { to { transform: translateY(-8px); opacity: 0; } }
+.lvlup { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; pointer-events: none; background: radial-gradient(circle, rgb(var(--red-rgb) / .22), rgba(8, 8, 11, .85) 60%); animation: lv 2.6s var(--ease) forwards; text-align: center; }
+.lvlup .eyebrow { color: var(--red-2); }
+.lvlup strong { display: block; font-size: clamp(90px, 18vw, 200px); font-weight: 800; letter-spacing: -.07em; line-height: .9; margin-top: 10px; }
+.lvlup em { display: block; font-style: normal; font-size: 24px; font-weight: 600; margin-top: 6px; color: var(--fg-2); }
+@keyframes lv { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+.lvlup div { animation: zoom 2.6s var(--ease); }
+@keyframes zoom { from { transform: scale(.7); } 30% { transform: scale(1); } }
+
+.foot { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-block: 28px 44px; font-size: 13px; color: var(--fg-3); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .two { grid-template-columns: minmax(0, 1fr); gap: 56px; }
+  .clock { display: none; }
+}
+@media (max-width: 760px) {
+  .top-row { flex-wrap: wrap; height: auto; padding-block: 12px 10px; gap: 10px 14px; }
+  .pills { order: 3; width: 100%; margin: 0; }
+  .me { margin-left: auto; }
+  .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 0; padding-top: 20px; }
+  .orb { order: -1; height: 300px; margin-bottom: 18px; }
+  .sec { margin-top: 56px; }
+  .route { padding: 26px 20px 22px; }
+  .path-wrap { margin-inline: -20px; padding-inline: 20px; }
+  .route .next { text-align: left; }
+  .form-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .contract { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .contract .sub-col { display: none; }
+}
+@media (max-width: 460px) {
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .stat .v { font-size: 38px; }
+  .who span.nm { display: none; }
+  .who { padding-right: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="aurora" aria-hidden="true"></div>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="logo" href="#cockpit" aria-label="Nobrayn, cockpit">no<s>brayn</s><i>.</i></a>
+    <nav class="pills" aria-label="Sections">
+      <a class="pill" href="#cockpit">Cockpit</a>
+      <a class="pill" href="#todo">To do</a>
+      <a class="pill" href="#planning">Planning</a>
+      <a class="pill" href="#objectifs">Vision</a>
+      <a class="pill" href="#produits">Produits</a>
+    </nav>
+    <div class="me">
+      <button class="theme-btn" id="themeBtn" type="button" title="Thème clair / sombre" aria-label="Basculer thème clair / sombre"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg></button>
+      <span class="live-dot" title="En marche" aria-hidden="true"></span>
+      <span class="clock num" id="clock">--:--</span>
+      <button class="who" id="whoChip" type="button" title="Changer de pilote" hidden></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="notice" id="whoBanner" hidden>
+    <p><b>Qui est aux commandes ?</b> <span class="muted">On s'en sert pour compter votre XP.</span></p>
+    <button class="btn sm" type="button" data-act="who" data-h="romain">Je suis Romain</button>
+    <button class="btn sm red" type="button" data-act="who" data-h="pa">Je suis P'A</button>
+  </div>
+  <div class="notice" id="localBanner" hidden>
+    <p><b>Version provisoire.</b> <span class="muted">Vos données restent dans ce navigateur. Exportez-les pour les partager.</span></p>
+    <button class="btn sm" type="button" data-act="export">Exporter</button>
+    <label class="btn sm" for="importFile" style="cursor:pointer">Importer</label>
+  </div>
+  <div class="notice" id="offBanner" hidden><p><b>Données indisponibles ici.</b> <span class="muted">Ouvrez le cockpit depuis claude.ai, connecté.</span></p></div>
+</div>
+
+<main class="wrap view" id="view" aria-live="polite"></main>
+
+<footer class="wrap foot">
+  <span>Cockpit Nobrayn · V2 · données : <span id="modeLabel">—</span></span>
+  <span style="display:flex; gap:8px"><button class="btn sm ghost" type="button" data-act="export">Exporter</button><label class="btn sm ghost" for="importFile" style="cursor:pointer">Importer</label></span>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+</footer>
+<div class="toasts" id="toasts"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ================= Constantes (identiques à la V1 : mêmes données, même XP) ================= */
+const NAMES = { romain: 'Romain', pa: "P'A", duo: 'Duo' };
+const INITIALS = { romain: 'RP', pa: 'PA', duo: '2×' };
+const SIZE_XP = { S: 10, M: 25, L: 50 };
+const XP_MILESTONE = 40, XP_OBJECTIVE = 100, XP_DAILY = 20, DAILY_GOAL = 3;
+const DEFAULT_TIERS = [50, 100, 500, 1000, 2000, 3500, 5000, 10000];
+const TIER_NAMES = ['Allumage', 'Décollage', 'Orbite basse', 'Orbite', 'Lune', 'Mars', 'Jupiter', 'Hors système', 'Proxima', 'Andromède'];
+const RANKS = ['Recrue', 'Apprenti', 'Opérateur', 'Pilote', 'Navigateur', 'Commandant', 'Capitaine', 'Amiral', 'Légende', 'Hors système'];
+const STAGES = [['idee', 'Idée'], ['test', 'En test'], ['vente', 'En vente']];
+const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+const MONTHS_FULL = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+const S = { tasks: [], milestones: [], objectives: [], products: [], revenue: [], players: {}, config: {}, db: null, uid: null, handle: null, canWrite: true, online: false, view: null };
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+S.handle = ls.get('nobrayn-pilot');
+
+/* ================= Utilitaires ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = (n) => (n < 10 ? '0' : '') + n;
+const dayKey = (ms) => { const d = new Date(ms); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+const todayKey = () => dayKey(Date.now());
+const parseDay = (s) => { if (!s) return null; const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const fmtDay = (s) => { const d = parseDay(s); return d ? d.getDate() + ' ' + MONTHS[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? ' ' + d.getFullYear() : '') : ''; };
+const daysUntil = (s) => { const d = parseDay(s); if (!d) return null; return Math.round((d - parseDay(todayKey())) / 864e5); };
+const eur = (n) => Math.round(n || 0).toLocaleString('fr-FR').replace(/ | /g, ' ') + ' €';
+const num = (v) => { const n = parseFloat(String(v).replace(',', '.').replace(/\s/g, '')); return isFinite(n) ? n : 0; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const byOrder = (a, b) => (a.order ?? 1e12) - (b.order ?? 1e12) || (a.createdAt || 0) - (b.createdAt || 0);
+const plural = (n, w) => n + ' ' + w + (n > 1 ? 's' : '');
+const when = (s) => { const n = daysUntil(s); if (n == null) return ''; if (n < 0) return 'en retard'; if (n === 0) return "aujourd'hui"; if (n === 1) return 'demain'; return 'dans ' + n + ' jours'; };
+const relTime = (ms) => {
+  const d = dayKey(ms);
+  if (d === todayKey()) { const x = new Date(ms); return "aujourd'hui, " + pad(x.getHours()) + ':' + pad(x.getMinutes()); }
+  if (-daysUntil(d) === 1) return 'hier';
+  return fmtDay(d);
+};
+function ring(pct, size, stroke, label, sub, white) {
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c * (1 - clamp(pct, 0, 1));
+  return `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle class="track" cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke-width="${stroke}"/>
+    <circle class="bar ${white ? 'white' : ''}" cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke-width="${stroke}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 ${size / 2} ${size / 2})"/>
+    ${label != null ? `<text x="50%" y="${sub ? '47%' : '50%'}" text-anchor="middle" dominant-baseline="central" font-size="${size * .3}">${esc(label)}</text>` : ''}
+    ${sub ? `<text class="sub" x="50%" y="70%" text-anchor="middle" dominant-baseline="central" font-size="${size * .12}">${esc(sub)}</text>` : ''}
+  </svg>`;
+}
+
+/* ================= Calculs ================= */
+function levelOf(xp) {
+  let L = 1;
+  while (50 * L * (L + 1) <= xp) L++;
+  const base = 50 * L * (L - 1), span = 100 * L;
+  return { L, cur: xp - base, span, rank: RANKS[Math.min(L - 1, RANKS.length - 1)] };
+}
+function tiers() {
+  const t = Array.isArray(S.config.tiers) && S.config.tiers.length ? S.config.tiers : DEFAULT_TIERS;
+  return t.map(Number).filter((n) => n > 0).sort((a, b) => a - b);
+}
+function compute() {
+  const xp = { romain: 0, pa: 0, team: 0 };
+  const credit = (h, n) => { if (h === 'romain' || h === 'pa') xp[h] += n; else { xp.romain += n / 2; xp.pa += n / 2; } xp.team += n; };
+  const done = S.tasks.filter((t) => t.status === 'done' && t.doneAt);
+  const perDay = {};
+  done.forEach((t) => {
+    const h = t.doneBy || t.owner || 'duo';
+    credit(h, SIZE_XP[t.size] || 25);
+    const k = dayKey(t.doneAt);
+    const d = perDay[k] || (perDay[k] = { n: 0, romain: 0, pa: 0 });
+    d.n++; if (h === 'romain' || h === 'pa') d[h]++;
+  });
+  S.milestones.filter((m) => m.done).forEach((m) => credit(m.doneBy || 'duo', XP_MILESTONE));
+  S.objectives.filter((o) => (o.progress || 0) >= 100).forEach((o) => credit(o.owner || 'duo', XP_OBJECTIVE));
+  Object.values(perDay).forEach((d) => { if (d.n >= DAILY_GOAL) credit('duo', XP_DAILY); });
+  const mrr = S.revenue.filter((r) => r.active !== false && r.kind !== 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
+  const cash = S.revenue.filter((r) => r.kind === 'ponctuel').reduce((s, r) => s + num(r.amount), 0);
+  const T = tiers();
+  const won = T.filter((a) => mrr >= a);
+  won.forEach((a, i) => credit('duo', 50 * (i + 1)));
+  let streak = 0;
+  const cursor = new Date(); cursor.setHours(12, 0, 0, 0);
+  if (!perDay[dayKey(cursor)]) cursor.setDate(cursor.getDate() - 1);
+  while (perDay[dayKey(cursor)]) { streak++; cursor.setDate(cursor.getDate() - 1); }
+  let bestCombo = 0; Object.values(perDay).forEach((d) => { bestCombo = Math.max(bestCombo, d.n); });
+  const duoDay = Object.values(perDay).some((d) => d.romain > 0 && d.pa > 0);
+  const today = perDay[todayKey()] || { n: 0, romain: 0, pa: 0 };
+  const open = S.tasks.filter((t) => t.status !== 'done');
+  const late = open.filter((t) => t.due && daysUntil(t.due) < 0);
+  const msDone = S.milestones.filter((m) => m.done).length;
+  const objWon = S.objectives.filter((o) => (o.progress || 0) >= 100).length;
+  const selling = S.products.filter((p) => p.stage === 'vente').length;
+  const badges = [
+    ['1', 'Premier pas', 'Une mission faite', done.length >= 1],
+    ['×3', 'Combo', '3 missions en un jour', bestCombo >= DAILY_GOAL],
+    ['2×', 'En duo', 'Tous les deux le même jour', duoDay],
+    ['7j', 'Série de 7', '7 jours d\'affilée', streak >= 7],
+    ['25', 'Machine', '25 missions faites', done.length >= 25],
+    ['◆', 'Premier jalon', 'Un jalon atteint', msDone >= 1],
+    ['%', 'Cap tenu', 'Un objectif à 100 %', objWon >= 1],
+    ['↗', 'En vitrine', 'Un produit en vente', selling >= 1],
+    ['€', 'Premier client', 'Un premier revenu', S.revenue.length >= 1],
+    ['100', 'Centurion', '100 missions faites', done.length >= 100]
+  ];
+  return { xp, perDay, done, open, late, today, streak, mrr, cash, T, won, badges };
+}
+
+/* ================= Stockage : base partagée (claude.ai) ou navigateur (ailleurs) ================= */
+const STORE_KEY = 'nobrayn-cockpit-data';
+const SEED = { 'config/main': { tiers: DEFAULT_TIERS } };
+function LocalDB() {
+  let store = null;
+  try { store = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) {}
+  if (!store) store = JSON.parse(JSON.stringify(SEED));
+  const subs = [];
+  const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {} };
+  persist();
+  const notify = () => setTimeout(() => subs.forEach((f) => f()));
+  // La V1 ouverte dans un autre onglet écrit la même clé : on suit ses changements
+  window.addEventListener('storage', (e) => { if (e.key === STORE_KEY && e.newValue) { try { store = JSON.parse(e.newValue); notify(); } catch (x) {} } });
+  const snapCol = (c) => {
+    const docs = Object.keys(store).filter((k) => k.split('/').length === 2 && k.split('/')[0] === c).map((k) => ({ id: k.split('/')[1], exists: true, data: () => store[k], metadata: {} }));
+    return { docs, size: docs.length, empty: !docs.length, docChanges: () => [], metadata: {} };
+  };
+  const doc = (path) => ({
+    id: path.split('/').pop(), path,
+    async set(d) { store[path] = JSON.parse(JSON.stringify(d)); persist(); notify(); },
+    async update(d) { if (!store[path]) throw { code: 'invalid_argument' }; store[path] = Object.assign({}, store[path], JSON.parse(JSON.stringify(d))); persist(); notify(); },
+    async delete() { delete store[path]; persist(); notify(); },
+    onSnapshot(next) { const f = () => next({ id: path.split('/').pop(), exists: !!store[path], data: () => store[path], metadata: {} }); subs.push(f); setTimeout(f); return () => {}; }
+  });
+  const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  return {
+    local: true, doc,
+    collection: (c) => ({
+      doc: (id) => doc(c + '/' + (id || newId())),
+      async add(d) { const r = doc(c + '/' + newId()); await r.set(d); return r; },
+      onSnapshot(next) { const f = () => next(snapCol(c)); subs.push(f); setTimeout(f); return () => {}; }
+    }),
+    load(data) { store = JSON.parse(JSON.stringify(data)); persist(); notify(); }
+  };
+}
+const COLLS = ['tasks', 'milestones', 'objectives', 'products', 'revenue'];
+async function write(fn) {
+  if (!S.db) { toast('Hors ligne', 'Impossible d\'enregistrer ici.'); return false; }
+  if (!S.canWrite) { toast('Lecture seule', 'Demandez un accès Éditeur à Romain.'); return false; }
+  try { await fn(S.db); return true; }
+  catch (e) {
+    const code = e && e.code;
+    if (code === 'invalid_argument') { S.canWrite = false; toast('Lecture seule', 'Votre accès ne permet pas de modifier.'); }
+    else if (code === 'quota_exceeded') toast('Stockage plein', 'Supprimez d\'anciennes missions.');
+    else toast('Pas enregistré', 'Réessayez dans un instant.');
+    return false;
+  }
+}
+function subscribeAll() {
+  COLLS.forEach((c) => S.db.collection(c).onSnapshot((snap) => { S[c] = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())); scheduleRender(); }, () => {}));
+  S.db.collection('players').onSnapshot((snap) => {
+    const m = {}; snap.docs.forEach((d) => { m[d.id] = d.data(); });
+    S.players = m;
+    if (S.uid && m[S.uid] && m[S.uid].handle) { S.handle = m[S.uid].handle; ls.set('nobrayn-pilot', S.handle); }
+    scheduleRender();
+  }, () => {});
+  S.db.doc('config/main').onSnapshot((d) => { S.config = d.exists ? d.data() : {}; scheduleRender(); }, () => {});
+}
+async function boot() {
+  route();
+  let framed = true; try { framed = window.top !== window; } catch (e) {}
+  let tries = 0;
+  while (framed && !(window.claude && window.claude.use) && tries < 20) { await new Promise((r) => setTimeout(r, 150)); tries++; }
+  if (!(window.claude && window.claude.use)) { S.db = LocalDB(); S.online = true; $('#localBanner').hidden = false; subscribeAll(); render(); return; }
+  const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+  if (!db) { $('#offBanner').hidden = false; render(); return; }
+  S.db = db; S.online = true;
+  if (user) {
+    try { S.uid = await user.id(); } catch (e) {}
+    try { if ((await user.can('data.write')) === false) S.canWrite = false; } catch (e) {}
+  }
+  subscribeAll(); render();
+}
+
+/* Export / import : même format que la V1 */
+function snapshotAll() {
+  const out = { 'config/main': S.config || {} };
+  COLLS.forEach((c) => S[c].forEach((d) => { const x = Object.assign({}, d); delete x.id; out[c + '/' + d.id] = x; }));
+  return out;
+}
+async function exportData() {
+  const json = JSON.stringify({ app: 'cockpit-nobrayn', exportedAt: new Date().toISOString(), data: snapshotAll() }, null, 1);
+  if (S.db && S.db.local) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    a.download = 'cockpit-nobrayn-' + todayKey() + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('Exporté', 'Fichier enregistré.');
+  } else {
+    try { await navigator.clipboard.writeText(json); toast('Copié', 'Données dans le presse-papiers.'); }
+    catch (e) { toast('Copie impossible', 'Le navigateur bloque le presse-papiers.'); }
+  }
+}
+async function importData(file) {
+  let parsed;
+  try { parsed = JSON.parse(await file.text()); } catch (e) { toast('Fichier illisible', 'Choisissez un export du cockpit.'); return; }
+  const data = parsed && parsed.app === 'cockpit-nobrayn' ? parsed.data : null;
+  if (!data) { toast('Mauvais fichier', 'Ce fichier ne vient pas du cockpit.'); return; }
+  if (S.db && S.db.local) { S.db.load(data); toast('Importé', 'Données chargées.'); return; }
+  const entries = Object.entries(data).filter(([k]) => /^[A-Za-z0-9_-]+\/[A-Za-z0-9_.~:@+-]+$/.test(k));
+  let ok = 0;
+  for (const [k, v] of entries) { if (await write((db) => db.doc(k).set(v))) ok++; else break; }
+  toast('Importé', ok + ' éléments enregistrés.');
+}
+
+/* ================= Rendu ================= */
+let raf = 0;
+function scheduleRender() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); }
+function route() {
+  const v = (location.hash || '#cockpit').slice(1);
+  const view = ['cockpit', 'todo', 'planning', 'objectifs', 'produits'].includes(v) ? v : 'cockpit';
+  document.querySelectorAll('.pill').forEach((a) => a.setAttribute('aria-current', a.getAttribute('href') === '#' + view ? 'page' : 'false'));
+  if (view !== S.view) {
+    S.view = view;
+    const main = $('#view');
+    main.innerHTML = SKELETON[view]();
+    bindView(view);
+    window.scrollTo(0, 0);
+  }
+  render();
+}
+window.addEventListener('hashchange', route);
+function render() {
+  const C = compute();
+  const chip = $('#whoChip');
+  if (S.handle) {
+    chip.hidden = false;
+    chip.innerHTML = `<span class="avatar sm ${S.handle}">${INITIALS[S.handle]}</span><span class="nm">${esc(NAMES[S.handle])} · niv. ${levelOf(C.xp[S.handle] || 0).L}</span>`;
+  } else chip.hidden = true;
+  $('#whoBanner').hidden = !!S.handle || !S.online;
+  $('#modeLabel').textContent = !S.online ? 'hors ligne' : S.db && S.db.local ? 'ce navigateur' : 'partagées';
+  if (FILL[S.view]) FILL[S.view](C);
+  Orb.feed(C);
+}
+
+const SKELETON = {
+  cockpit: () => `
+    <section class="hero">
+      <div>
+        <p class="eyebrow" id="ck-date"></p>
+        <h1 id="ck-hello">Bonjour<em>.</em></h1>
+        <p class="lead" id="ck-lead"></p>
+        <div class="hero-actions"><button class="btn red" type="button" data-act="add-open">Nouvelle mission</button><a class="btn ghost" href="#todo">Voir la to do</a></div>
+      </div>
+      <div class="orb" id="orb"><span class="gyro" aria-hidden="true"><i></i><i></i><b></b></span><canvas id="orbCanvas" aria-label="Le cœur Nobrayn : missions ouvertes en orbite, missions faites aujourd'hui en rouge."></canvas>
+        <div class="orb-legend"><span><i></i><b class="num" id="lg-open">0</b>&nbsp;en orbite</span><span><i class="red"></i><b class="num" id="lg-done">0</b>&nbsp;faites aujourd'hui</span></div></div>
+    </section>
+    <section class="stats" id="ck-stats"></section>
+    <section class="sec"><div class="sec-head"><h2>Route du MRR</h2><a href="#produits">Contrats →</a></div><div class="route" id="ck-route"></div></section>
+    <section class="sec two">
+      <div><div class="sec-head"><h2>À faire maintenant</h2><a href="#todo">Tout voir →</a></div><div class="list" id="ck-next"></div></div>
+      <div><div class="sec-head"><h2>L'équipage</h2><span class="link" id="ck-team"></span></div><div class="duo" id="ck-duo"></div></div>
+    </section>
+    <section class="sec two">
+      <div><div class="sec-head"><h2>Succès</h2><span class="link" id="ck-bcount"></span></div><div class="medals" id="ck-medals"></div></div>
+      <div><div class="sec-head"><h2>Journal</h2></div><ul class="journal" id="ck-log"></ul></div>
+    </section>`,
+  todo: () => `
+    <section class="page-title"><h1>To do<i>.</i></h1><p id="td-sum"></p></section>
+    <section class="sec" style="margin-top:36px">${adderHTML()}</section>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:36px 0 0 16px">
+      <div class="chips" id="td-filter"><button class="chip" type="button" data-f="all">Tout</button><button class="chip" type="button" data-f="romain">Romain</button><button class="chip" type="button" data-f="pa">P'A</button><button class="chip" type="button" data-f="duo">Duo</button></div>
+    </div>
+    <section id="td-lists"></section>`,
+  planning: () => `
+    <section class="page-title"><h1>Planning<i>.</i></h1><p id="pl-sum"></p></section>
+    <section class="sec" style="margin-top:44px"><div class="timeline" id="pl-tl"></div></section>
+    <section class="sec"><div class="sec-head"><h2>Ajouter un jalon</h2><span class="link">+${XP_MILESTONE} XP quand il est atteint</span></div>
+      <form class="form-grid" id="f-ms" style="grid-template-columns: minmax(0,2fr) minmax(0,1fr) auto">
+        <input class="in" id="m-title" required maxlength="120" placeholder="Ex. Premier devis signé" aria-label="Jalon">
+        <input class="in" id="m-date" type="date" required aria-label="Date">
+        <button class="btn red" type="submit">Ajouter</button>
+      </form></section>`,
+  objectifs: () => `
+    <section class="vision">
+      <p class="eyebrow">Vision Nobrayn</p>
+      <blockquote id="ob-vtext"></blockquote>
+      <div id="ob-vedit" hidden style="max-width:720px; margin-top:22px">
+        <textarea class="in" id="v-text" rows="3" maxlength="400" aria-label="Vision"></textarea>
+        <div style="display:flex; gap:8px; margin-top:12px"><button class="btn red sm" type="button" data-act="vision-save">Enregistrer</button><button class="btn sm ghost" type="button" data-act="vision-cancel">Annuler</button></div>
+      </div>
+      <button class="btn sm ghost" type="button" data-act="vision-edit" style="margin-top:22px; margin-left:-14px">Réécrire la vision</button>
+    </section>
+    <section class="sec"><div class="sec-head"><h2>Objectifs</h2><span class="link">+${XP_OBJECTIVE} XP à 100 %</span></div><div class="cards" id="ob-list"></div></section>
+    <section class="sec"><div class="sec-head"><h2>Nouvel objectif</h2></div>
+      <form class="form-grid" id="f-obj" style="grid-template-columns: minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) auto">
+        <input class="in" id="o-title" required maxlength="120" placeholder="Objectif, ex. 3 clients payés" aria-label="Objectif">
+        <input class="in" id="o-metric" maxlength="160" placeholder="Comment on le mesure" aria-label="Mesure">
+        <input class="in" id="o-date" type="date" aria-label="Horizon">
+        <button class="btn red" type="submit">Ajouter</button>
+        <div class="adder-opts" style="grid-column:1 / -1; padding:4px 0 0"><span><span class="lbl">Qui s'en charge</span><span class="chips" data-pick="owner" style="display:inline-flex"><button type="button" class="chip" data-v="romain" aria-pressed="true">Romain</button><button type="button" class="chip" data-v="pa">P'A</button><button type="button" class="chip" data-v="duo">Les deux</button></span></span></div>
+      </form></section>
+    <section class="sec"><div class="sec-head"><h2>Paliers de MRR</h2><span class="link">en € par mois</span></div>
+      <form class="form-grid" id="f-tiers" style="grid-template-columns: minmax(0,1fr) auto">
+        <input class="in num" id="tiers-in" inputmode="numeric" aria-label="Paliers, séparés par des virgules">
+        <button class="btn" type="submit">Mettre à jour</button>
+      </form></section>`,
+  produits: () => `
+    <section class="page-title"><h1>Produits<i>.</i></h1><p id="pr-sum"></p></section>
+    <section class="sec" style="margin-top:44px"><div class="cards" id="pr-list"></div></section>
+    <section class="sec"><div class="sec-head"><h2>Nouveau produit</h2></div>
+      <form class="form-grid" id="f-prod" style="grid-template-columns: minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto">
+        <input class="in" id="p-name" required maxlength="80" placeholder="Ex. Site vitrine artisan" aria-label="Produit">
+        <select class="in" id="p-kind" aria-label="Type"><option value="appel">Ponctuel</option><option value="recurrent">Mensuel</option></select>
+        <input class="in num" id="p-price" inputmode="decimal" placeholder="Prix en €" aria-label="Prix">
+        <button class="btn red" type="submit">Ajouter</button>
+      </form></section>
+    <section class="sec"><div class="sec-head"><h2>Contrats</h2><span class="link">Les mensuels actifs font le MRR</span></div>
+      <div class="contracts" id="rv-list"></div>
+      <form class="form-grid" id="f-rev" style="grid-template-columns: minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto; margin-top:22px">
+        <input class="in" id="r-client" required maxlength="80" placeholder="Client" aria-label="Client">
+        <select class="in" id="r-prod" aria-label="Produit"></select>
+        <select class="in" id="r-kind" aria-label="Type"><option value="mensuel">Mensuel</option><option value="ponctuel">Ponctuel</option></select>
+        <input class="in num" id="r-amount" inputmode="decimal" required placeholder="Montant €" aria-label="Montant">
+        <button class="btn red" type="submit">Encaisser</button>
+      </form></section>`
+};
+function adderHTML(id = 'f-task') {
+  return `<form class="adder" id="${id}">
+    <input class="in" id="${id}-title" required maxlength="140" placeholder="Nouvelle mission… ex. Appeler 5 artisans" aria-label="Mission">
+    <button class="btn red" type="submit">Ajouter</button>
+    <div class="adder-opts">
+      <span><span class="lbl">Pour</span><span class="chips" data-pick="owner" style="display:inline-flex"><button type="button" class="chip" data-v="duo" aria-pressed="true">Duo</button><button type="button" class="chip" data-v="romain">Romain</button><button type="button" class="chip" data-v="pa">P'A</button></span></span>
+      <span><span class="lbl">Taille</span><span class="chips" data-pick="size" style="display:inline-flex"><button type="button" class="chip" data-v="S">Rapide · 10</button><button type="button" class="chip red" data-v="M" aria-pressed="true">Normal · 25</button><button type="button" class="chip" data-v="L">Gros · 50</button></span></span>
+      <span><span class="lbl">Échéance</span><input class="in" id="${id}-due" type="date" aria-label="Échéance"></span>
+    </div>
+  </form>`;
+}
+
+/* ---------- Fragments ---------- */
+function taskRow(t, opts = {}) {
+  const st = t.status || 'todo', isDone = st === 'done';
+  const label = isDone ? 'Rouvrir' : st === 'doing' ? 'Marquer comme faite' : 'Commencer';
+  const meta = [];
+  meta.push(`<span class="who-tag">${esc(NAMES[t.owner] || 'Duo')}</span>`);
+  if (!isDone && t.due) { const n = daysUntil(t.due); meta.push(`<span class="${n <= 0 ? 'late' : ''}">${n < 0 ? 'En retard · ' + fmtDay(t.due) : n === 0 ? "Aujourd'hui" : fmtDay(t.due) + ' · ' + when(t.due)}</span>`); }
+  if (st === 'doing') meta.push('<span class="r">En cours</span>');
+  if (isDone && t.doneAt) meta.push(`<span>Fait ${relTime(t.doneAt)}${t.doneBy && t.doneBy !== 'duo' ? ' par ' + esc(NAMES[t.doneBy]) : ''}</span>`);
+  return `<div class="task ${isDone ? 'is-done' : ''}">
+    <button class="tick ${st}" type="button" data-act="task-next" data-id="${esc(t.id)}" aria-label="${label}" title="${label}"></button>
+    <div style="min-width:0"><div class="t-title" data-edit="tasks:${esc(t.id)}:title" title="Double-clic pour renommer">${esc(t.title)}</div><div class="t-meta">${meta.join('')}</div></div>
+    <div class="t-side"><span class="xp">+${SIZE_XP[t.size] || 25} XP</span>${opts.del ? `<button class="del" type="button" data-act="del" data-c="tasks" data-id="${esc(t.id)}" aria-label="Supprimer">✕</button>` : ''}</div>
+  </div>`;
+}
+const emptyBox = (h) => `<div class="empty">${h}</div>`;
+const sortOpen = (a, b) => ((b.status === 'doing') - (a.status === 'doing')) || (a.due || '9').localeCompare(b.due || '9') || byOrder(a, b);
+
+/* ---------- Remplissage ---------- */
+const FILL = {
+  cockpit(C) {
+    const d = new Date();
+    $('#ck-date').textContent = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) + ' · ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    const h = d.getHours();
+    $('#ck-hello').innerHTML = `${h >= 18 || h < 5 ? 'Bonsoir' : 'Bonjour'}${S.handle ? ' <em>' + esc(NAMES[S.handle]) + '</em>' : ''}<em>.</em>`;
+    const open = C.open.slice().sort(sortOpen);
+    const nextT = open[0];
+    const ms = S.milestones.filter((m) => !m.done).sort((a, b) => (a.date || '').localeCompare(b.date || ''))[0];
+    let lead = C.open.length ? `Il reste <b>${plural(C.open.length, 'mission')}</b>${C.late.length ? `, dont <b class="r">${C.late.length} en retard</b>` : ''}.` : '<b>Tout est fait.</b> Ajoutez la suite.';
+    if (nextT) lead += ` Prochaine : <b>${esc(nextT.title)}</b>${nextT.due ? ', ' + when(nextT.due) : ''}.`;
+    if (ms) lead += ` Cap sur <b>${esc(ms.title)}</b>, ${when(ms.date)}.`;
+    $('#ck-lead').innerHTML = lead;
+    $('#lg-open').textContent = C.open.length; $('#lg-done').textContent = C.today.n;
+
+    // Indicateurs
+    const T = C.T, ci = T.findIndex((a) => C.mrr < a), next = ci === -1 ? null : T[ci], prev = ci > 0 ? T[ci - 1] : 0;
+    const me = S.handle && S.handle !== 'duo' ? S.handle : null;
+    const lv = levelOf(me ? C.xp[me] : C.xp.team);
+    const q = Math.min(C.today.n, DAILY_GOAL);
+    $('#ck-stats').innerHTML = `
+      <a class="stat" href="#produits"><span class="k">Revenu mensuel</span><span class="v num">${eur(C.mrr).replace(' €', '')}<small>€ / mois</small></span><span class="s">${next ? `<b>${eur(next - C.mrr)}</b> avant ${TIER_NAMES[ci]}` : 'Tous les paliers atteints'}</span></a>
+      <div class="stat"><span class="k">${me ? 'Votre niveau' : 'Niveau d\'équipe'}</span><div class="stat-ring">${ring(lv.cur / lv.span, 76, 7, lv.L)}<div><div style="font-size:18px;font-weight:700;letter-spacing:-.02em">${lv.rank}</div><span class="s num">${Math.round(lv.span - lv.cur)} XP avant niv. ${lv.L + 1}</span></div></div></div>
+      <div class="stat"><span class="k">Quête du jour</span><div class="stat-ring">${ring(q / DAILY_GOAL, 76, 7, q + '/' + DAILY_GOAL)}<div><div style="font-size:18px;font-weight:700;letter-spacing:-.02em">${q >= DAILY_GOAL ? 'Accomplie' : DAILY_GOAL + ' missions'}</div><span class="s">${q >= DAILY_GOAL ? '+' + XP_DAILY + ' XP gagnés' : '+' + XP_DAILY + ' XP de bonus'}</span></div></div></div>
+      <div class="stat"><span class="k">Série</span><span class="v num">${C.streak}<small>${C.streak > 1 ? 'jours' : 'jour'}</small></span><span class="s">${C.streak ? 'Ne cassez pas la chaîne' : 'Cochez une mission pour la lancer'}</span></div>`;
+
+    // Route du MRR
+    const pos = next ? (ci + clamp((C.mrr - prev) / (next - prev), 0, 1)) / T.length : 1;
+    $('#ck-route').innerHTML = `
+      <div class="route-top">
+        <div><p class="eyebrow">MRR actuel</p><div class="big num" style="margin-top:12px">${eur(C.mrr).replace(' €', '')}<small>€ / mois</small></div></div>
+        <p class="next">${next ? `Prochain palier : <b>${TIER_NAMES[ci]}</b>, ${eur(next)}.<br>Encore <em>${eur(next - C.mrr)}</em> par mois.` : 'Tous les paliers sont franchis. Ajoutez-en un dans Vision.'}</p>
+      </div>
+      <div class="path-wrap"><div class="path">
+        <span class="fill" style="width:${(clamp(pos, 0, 1) * 100 - 100 / T.length / 2).toFixed(2)}%"></span>
+        ${T.map((a, i) => `<div class="node ${C.mrr >= a ? 'won' : i === ci ? 'cur' : ''}"><span class="dot"></span><span class="amt num">${eur(a)}</span><span class="nm">${TIER_NAMES[i] || 'Palier ' + (i + 1)}</span></div>`).join('')}
+      </div></div>`;
+
+    // À faire maintenant
+    $('#ck-next').innerHTML = open.length ? open.slice(0, 5).map((t) => taskRow(t)).join('') : emptyBox('<b>Tout est fait.</b> Ajoutez la prochaine mission.');
+
+    // Équipage
+    const last14 = []; for (let i = 13; i >= 0; i--) { const x = new Date(); x.setDate(x.getDate() - i); last14.push(dayKey(x.getTime())); }
+    const pilot = (h) => {
+      const l = levelOf(C.xp[h]);
+      const counts = last14.map((k) => (C.perDay[k] ? C.perDay[k][h] : 0)), max = Math.max(1, ...counts);
+      return `<div class="pilot">${ring(l.cur / l.span, 64, 5, l.L, null, h === 'romain')}
+        <div class="info"><div class="name">${esc(NAMES[h])}${S.handle === h ? '<small>vous</small>' : ''}</div><div class="rank">${l.rank} · <span class="num">${Math.round(C.xp[h])} XP</span></div>
+        <div class="bars" title="Missions faites, 14 derniers jours">${counts.map((n, i) => `<i class="${n ? 'on' : ''} ${i === 13 && n ? 'today' : ''}" style="height:${Math.max(14, n / max * 100)}%"></i>`).join('')}</div></div></div>`;
+    };
+    $('#ck-duo').innerHTML = pilot('romain') + pilot('pa');
+    $('#ck-team').textContent = 'Équipe niv. ' + levelOf(C.xp.team).L;
+
+    // Succès
+    $('#ck-bcount').textContent = C.badges.filter((b) => b[3]).length + ' sur ' + C.badges.length;
+    $('#ck-medals').innerHTML = C.badges.map(([g, n, dsc, ok]) => `<div class="medal ${ok ? 'won' : ''}" title="${esc(dsc)}"><span class="m">${g}</span><span><b>${n}</b><small>${dsc}</small></span></div>`).join('');
+
+    // Journal
+    const ev = [];
+    C.done.forEach((t) => ev.push({ at: t.doneAt, who: t.doneBy || t.owner, text: t.title, xp: SIZE_XP[t.size] || 25 }));
+    S.milestones.filter((m) => m.done && m.doneAt).forEach((m) => ev.push({ at: m.doneAt, who: m.doneBy, text: 'Jalon : ' + m.title, xp: XP_MILESTONE }));
+    S.revenue.filter((r) => r.createdAt).forEach((r) => ev.push({ at: r.createdAt, who: 'duo', text: (r.kind === 'ponctuel' ? 'Encaissé : ' : 'Contrat : ') + r.client + ', ' + eur(r.amount), xp: 0 }));
+    ev.sort((a, b) => b.at - a.at);
+    $('#ck-log').innerHTML = ev.length ? ev.slice(0, 6).map((e) => `<li><span><b>${esc(NAMES[e.who] || 'Duo')}</b> · ${esc(e.text)}<time>${relTime(e.at)}</time></span><span class="gain">${e.xp ? '+' + e.xp + ' XP' : '€'}</span></li>`).join('') : '<li><span>Le journal se remplit à chaque mission cochée.</span></li>';
+  },
+
+  todo(C) {
+    const f = ls.get('nobrayn-filter') || 'all';
+    document.querySelectorAll('#td-filter .chip').forEach((b) => b.setAttribute('aria-pressed', b.dataset.f === f ? 'true' : 'false'));
+    const list = S.tasks.filter((t) => f === 'all' || (t.owner || 'duo') === f);
+    const doing = list.filter((t) => t.status === 'doing').sort(byOrder);
+    const todo = list.filter((t) => (t.status || 'todo') === 'todo').sort(sortOpen);
+    const done = list.filter((t) => t.status === 'done').sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0));
+    const showDone = ls.get('nobrayn-showdone') === '1';
+    const group = (title, n, rows) => `<div class="group-title"><b>${title}</b><span class="num">${n}</span></div><div class="list">${rows}</div>`;
+    $('#td-lists').innerHTML =
+      (doing.length ? group('En cours', doing.length, doing.map((t) => taskRow(t, { del: true })).join('')) : '') +
+      group('À faire', todo.length, todo.map((t) => taskRow(t, { del: true })).join('') || emptyBox('Rien à faire. <b>Ajoutez une mission</b> au-dessus.')) +
+      `<div class="group-title"><b>Fait</b><span class="num">${done.length}</span></div>` +
+      (done.length ? `<div class="list">${(showDone ? done.slice(0, 40) : done.slice(0, 3)).map((t) => taskRow(t, { del: true })).join('')}</div>${done.length > 3 ? `<button class="more" type="button" data-act="toggle-done">${showDone ? 'Réduire' : 'Voir les ' + done.length + ' missions faites'}</button>` : ''}` : emptyBox('Les missions faites s\'afficheront ici.'));
+    $('#td-sum').innerHTML = `${plural(C.open.length, 'mission')} ouverte${C.open.length > 1 ? 's' : ''} · ${C.today.n} faite${C.today.n > 1 ? 's' : ''} aujourd'hui · série de ${plural(C.streak, 'jour')}. Cliquez le rond : on commence, puis c'est fait.`;
+  },
+
+  planning() {
+    const all = S.milestones.slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    const t = todayKey();
+    let html = '', lastMonth = '', nowPlaced = false;
+    all.forEach((m) => {
+      if (!nowPlaced && (m.date || '') > t) { html += `<div class="tl-now">Aujourd'hui</div>`; nowPlaced = true; }
+      const dd = parseDay(m.date), mk = dd ? MONTHS_FULL[dd.getMonth()] + ' ' + dd.getFullYear() : 'Sans date';
+      if (mk !== lastMonth) { html += `<div class="tl-month">${mk}</div>`; lastMonth = mk; }
+      const n = daysUntil(m.date);
+      html += `<div class="tl-item ${m.done ? 'is-done' : ''}">
+        <button class="tick ${m.done ? 'done' : ''}" type="button" data-act="ms-toggle" data-id="${esc(m.id)}" aria-label="${m.done ? 'Rouvrir le jalon' : 'Jalon atteint'}"></button>
+        <div style="min-width:0"><h3 data-edit="milestones:${esc(m.id)}:title">${esc(m.title)}</h3><p class="when">${fmtDay(m.date)} · ${m.done ? '<b>atteint' + (m.doneBy && m.doneBy !== 'duo' ? ' par ' + esc(NAMES[m.doneBy]) : '') + '</b>' : n < 0 ? '<b>en retard</b>' : when(m.date)}</p></div>
+        <div class="t-side"><span class="xp">+${XP_MILESTONE} XP</span><button class="del" type="button" data-act="del" data-c="milestones" data-id="${esc(m.id)}" aria-label="Supprimer">✕</button></div>
+      </div>`;
+    });
+    if (!nowPlaced && all.length) html += `<div class="tl-now">Aujourd'hui</div>`;
+    const tl = $('#pl-tl');
+    tl.innerHTML = all.length ? html : emptyBox('Aucun jalon. <b>Ajoutez le premier</b> plus bas.');
+    const doneN = all.filter((m) => m.done).length;
+    tl.style.setProperty('--tl-fill', all.length ? Math.round((doneN / all.length) * 100) + '%' : '0%');
+    const nxt = all.find((m) => !m.done);
+    $('#pl-sum').innerHTML = `${doneN} jalon${doneN > 1 ? 's' : ''} atteint${doneN > 1 ? 's' : ''} sur ${all.length}.${nxt ? ` Prochain : <b style="color:var(--fg)">${esc(nxt.title)}</b>, ${when(nxt.date)}.` : ''}`;
+  },
+
+  objectifs() {
+    const v = S.config.vision || '';
+    $('#ob-vtext').textContent = v || 'Écrivez ici, à deux, pourquoi Nobrayn existe.';
+    const objs = S.objectives.slice().sort((a, b) => (a.due || '9').localeCompare(b.due || '9'));
+    $('#ob-list').innerHTML = objs.length ? objs.map((o) => {
+      const p = o.progress || 0;
+      return `<article class="card"><button class="del" type="button" data-act="del" data-c="objectives" data-id="${esc(o.id)}" aria-label="Supprimer">✕</button>
+        <div class="obj-top">${ring(p / 100, 84, 7, p + '%')}<div style="min-width:0"><p class="when">${o.due ? 'Horizon ' + fmtDay(o.due) : 'Sans date'}</p><h3 data-edit="objectives:${esc(o.id)}:title">${esc(o.title)}</h3></div></div>
+        ${o.metric ? `<p>${esc(o.metric)}</p>` : ''}
+        <div class="chips" role="group" aria-label="Qui s'en charge">${[['romain', 'Romain'], ['pa', "P'A"], ['duo', 'Les deux']].map(([k, l]) => `<button type="button" class="chip ${k === 'pa' ? 'red' : ''}" aria-pressed="${(o.owner || 'duo') === k}" data-act="obj-owner" data-id="${esc(o.id)}" data-v="${k}">${l}</button>`).join('')}</div>
+        <input type="range" min="0" max="100" step="5" value="${p}" style="--p:${p}%" data-act="obj-progress" data-id="${esc(o.id)}" id="rg-${esc(o.id)}" aria-label="Avancement de ${esc(o.title)}">
+      </article>`;
+    }).join('') : emptyBox('Aucun objectif. Un par horizon, chacun mesurable.');
+    const ti = $('#tiers-in'); if (document.activeElement !== ti) ti.value = tiers().join(', ');
+  },
+
+  produits(C) {
+    const prods = S.products.slice().sort(byOrder);
+    const mrrBy = {}, cl = {};
+    S.revenue.forEach((r) => { if (r.productId) { cl[r.productId] = (cl[r.productId] || 0) + 1; if (r.kind !== 'ponctuel' && r.active !== false) mrrBy[r.productId] = (mrrBy[r.productId] || 0) + num(r.amount); } });
+    $('#pr-list').innerHTML = prods.length ? prods.map((p) => {
+      const si = STAGES.findIndex((s) => s[0] === (p.stage || 'idee'));
+      return `<article class="card"><button class="del" type="button" data-act="del" data-c="products" data-id="${esc(p.id)}" aria-label="Supprimer">✕</button>
+        <div><p class="kind ${p.kind === 'recurrent' ? 'rec' : ''}">${p.kind === 'recurrent' ? 'Mensuel' : 'Ponctuel'}</p><h3 style="margin-top:6px" data-edit="products:${esc(p.id)}:name">${esc(p.name)}</h3></div>
+        <div class="price num">${num(p.price) ? eur(p.price).replace(' €', '') + '<small> €' + (p.kind === 'recurrent' ? ' / mois' : '') + '</small>' : '<small>Prix à chiffrer</small>'}</div>
+        ${p.note ? `<p>${esc(p.note)}</p>` : ''}
+        <div class="stepper">${STAGES.map((s, i) => `${i ? `<span class="sep ${i <= si ? 'on' : ''}"></span>` : ''}<button type="button" class="${i <= si ? 'on' : ''} ${i === 2 ? 'sell' : ''}" data-act="prod-stage" data-id="${esc(p.id)}" data-s="${s[0]}"><i></i>${s[1]}</button>`).join('')}</div>
+        <div class="foot"><span>${plural(cl[p.id] || 0, 'client')}</span><span class="num">${mrrBy[p.id] ? eur(mrrBy[p.id]) + ' / mois' : ''}</span></div>
+      </article>`;
+    }).join('') : emptyBox('Aucun produit. Listez vos offres, du site vitrine à l\'agent IA.');
+    const sel = $('#r-prod');
+    if (document.activeElement !== sel) { const cur = sel.value; sel.innerHTML = '<option value="">Sans produit</option>' + prods.map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''); sel.value = cur; }
+    const pname = (id) => (S.products.find((p) => p.id === id) || {}).name || 'Sans produit';
+    const revs = S.revenue.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    $('#rv-list').innerHTML = revs.length ? revs.map((r) => {
+      const monthly = r.kind !== 'ponctuel', on = r.active !== false;
+      return `<div class="contract ${monthly && !on ? 'off' : ''}"><div style="min-width:0"><b>${esc(r.client)}</b><div class="sub">${esc(pname(r.productId))} · ${monthly ? 'mensuel' : 'ponctuel'}</div></div>
+        <span class="amt num">${eur(r.amount)}${monthly ? '<span class="faint" style="font-weight:500"> / mois</span>' : ''}</span>
+        ${monthly ? `<button class="switch" type="button" aria-pressed="${on}" data-act="rev-toggle" data-id="${esc(r.id)}" aria-label="Contrat actif"></button>` : '<span></span>'}
+        <button class="del" type="button" data-act="del" data-c="revenue" data-id="${esc(r.id)}" aria-label="Supprimer">✕</button></div>`;
+    }).join('') : emptyBox('Aucun contrat. Le premier débloque le succès <b>Premier client</b>.');
+    $('#pr-sum').innerHTML = `MRR <b style="color:var(--fg)">${eur(C.mrr)} / mois</b> · encaissé ponctuel ${eur(C.cash)} · ${plural(prods.filter((p) => p.stage === 'vente').length, 'produit')} en vente.`;
+  }
+};
+
+/* ================= Interactions ================= */
+function celebrate(gain, label) {
+  const h = S.handle, before = h ? levelOf(compute().xp[h]).L : 0;
+  toast('+' + gain + ' XP', label);
+  if (!h) return;
+  setTimeout(() => { const after = levelOf(compute().xp[h]); if (after.L > before) levelUp(after.L, after.rank); }, 700);
+}
+async function setTaskStatus(t, status) {
+  const data = { status };
+  if (status === 'done') { data.doneAt = Date.now(); data.doneBy = S.handle || (t.owner !== 'duo' ? t.owner : 'duo'); } else { data.doneAt = null; data.doneBy = null; }
+  const ok = await write((db) => db.doc('tasks/' + t.id).update(data));
+  if (ok && status === 'done') {
+    celebrate(SIZE_XP[t.size] || 25, t.title);
+    Orb.pulse();
+    setTimeout(() => { if (compute().today.n === DAILY_GOAL) toast('Quête du jour', 'Accomplie, +' + XP_DAILY + ' XP'); }, 400);
+  }
+}
+document.addEventListener('click', async (e) => {
+  const pick = e.target.closest('[data-pick] .chip');
+  if (pick) { pick.parentElement.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c === pick ? 'true' : 'false')); return; }
+  const fchip = e.target.closest('#td-filter .chip');
+  if (fchip) { ls.set('nobrayn-filter', fchip.dataset.f); render(); return; }
+  if (e.target.classList && e.target.classList.contains('sheet-bg')) { closeSheet(); return; }
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act, id = el.dataset.id;
+  if (act === 'who') {
+    S.handle = el.dataset.h; ls.set('nobrayn-pilot', S.handle);
+    if (S.db && S.uid && !S.db.local) write((db) => db.doc('players/' + S.uid).set({ handle: S.handle, at: Date.now() }));
+    render(); toast('Bienvenue', NAMES[S.handle] + ', votre XP est comptée à votre nom.');
+  } else if (act === 'task-next') {
+    const t = S.tasks.find((x) => x.id === id); if (!t) return;
+    const st = t.status || 'todo';
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    setTaskStatus(t, st === 'todo' ? 'doing' : st === 'doing' ? 'done' : 'todo');
+  } else if (act === 'ms-toggle') {
+    const m = S.milestones.find((x) => x.id === id); if (!m) return;
+    const done = !m.done;
+    const ok = await write((db) => db.doc('milestones/' + id).update(done ? { done, doneAt: Date.now(), doneBy: S.handle || 'duo' } : { done, doneAt: null, doneBy: null }));
+    if (ok && done) { celebrate(XP_MILESTONE, 'Jalon : ' + m.title); Orb.pulse(); }
+  } else if (act === 'del') {
+    if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'Supprimer'; setTimeout(() => { if (el.isConnected) { delete el.dataset.armed; el.textContent = '✕'; } }, 2600); return; }
+    write((db) => db.doc(el.dataset.c + '/' + id).delete());
+  } else if (act === 'prod-stage') {
+    write((db) => db.doc('products/' + id).update({ stage: el.dataset.s }));
+    if (el.dataset.s === 'vente') toast('En vitrine', 'Produit passé en vente.');
+  } else if (act === 'rev-toggle') {
+    const r = S.revenue.find((x) => x.id === id); if (r) write((db) => db.doc('revenue/' + id).update({ active: r.active === false }));
+  } else if (act === 'obj-owner') {
+    write((db) => db.doc('objectives/' + id).update({ owner: el.dataset.v }));
+  } else if (act === 'toggle-done') {
+    ls.set('nobrayn-showdone', ls.get('nobrayn-showdone') === '1' ? '0' : '1'); render();
+  } else if (act === 'export') exportData();
+  else if (act === 'add-open') openSheet();
+  else if (act === 'sheet-close') closeSheet();
+  else if (act === 'vision-edit') { $('#ob-vedit').hidden = false; $('#ob-vtext').hidden = true; el.hidden = true; const ta = $('#v-text'); ta.value = S.config.vision || ''; ta.focus(); }
+  else if (act === 'vision-cancel') closeVision();
+  else if (act === 'vision-save') {
+    const v = $('#v-text').value.trim();
+    if (await write((db) => db.doc('config/main').set(Object.assign({}, S.config, { vision: v, visionAt: Date.now() })))) { closeVision(); toast('Vision', 'Enregistrée.'); }
+  }
+});
+function closeVision() { $('#ob-vedit').hidden = true; $('#ob-vtext').hidden = false; const b = document.querySelector('[data-act="vision-edit"]'); if (b) b.hidden = false; }
+document.addEventListener('input', (e) => { if (e.target.type === 'range') e.target.style.setProperty('--p', e.target.value + '%'); });
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.id === 'importFile' && el.files && el.files[0]) { importData(el.files[0]); el.value = ''; return; }
+  if (el.dataset && el.dataset.act === 'obj-progress') {
+    const p = clamp(Math.round(num(el.value)), 0, 100);
+    const o = S.objectives.find((x) => x.id === el.dataset.id), was = o ? o.progress || 0 : 0;
+    write((db) => db.doc('objectives/' + el.dataset.id).update({ progress: p })).then((ok) => { if (ok && p >= 100 && was < 100) { celebrate(XP_OBJECTIVE, 'Objectif atteint' + (o && o.owner && o.owner !== 'duo' ? ' par ' + NAMES[o.owner] : '')); Orb.pulse(); } });
+  }
+});
+document.addEventListener('dblclick', (e) => {
+  const el = e.target.closest('[data-edit]');
+  if (!el || !S.canWrite || !S.online) return;
+  const [c, id, field] = el.dataset.edit.split(':');
+  const old = el.textContent, inp = document.createElement('input');
+  inp.className = 'edit-in'; inp.value = old; inp.maxLength = 140; inp.id = 'edit-' + id;
+  el.replaceWith(inp); inp.focus(); inp.select();
+  let fin = false;
+  const finish = (save) => { if (fin) return; fin = true; const v = inp.value.trim(); inp.replaceWith(el); if (save && v && v !== old) { el.textContent = v; write((db) => db.doc(c + '/' + id).update({ [field]: v })); } };
+  inp.addEventListener('keydown', (k) => { if (k.key === 'Enter') finish(true); if (k.key === 'Escape') finish(false); });
+  inp.addEventListener('blur', () => finish(true));
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeSheet();
+  if (e.key === 'n' && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); openSheet(); }
+});
+
+function bindAdder(id, after) {
+  const f = $('#' + id); if (!f) return;
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = $('#' + id + '-title').value.trim(); if (!title) return;
+    const pickV = (k) => { const b = f.querySelector(`[data-pick="${k}"] [aria-pressed="true"]`); return b ? b.dataset.v : null; };
+    const ok = await write((db) => db.collection('tasks').add({ title, owner: pickV('owner') || 'duo', size: pickV('size') || 'M', due: $('#' + id + '-due').value || '', status: 'todo', createdAt: Date.now(), createdBy: S.handle || '' }));
+    if (ok) { $('#' + id + '-title').value = ''; $('#' + id + '-due').value = ''; toast('Ajoutée', title); if (after) after(); else $('#' + id + '-title').focus(); }
+  });
+}
+function openSheet() {
+  if ($('.sheet-bg')) return;
+  const bg = document.createElement('div');
+  bg.className = 'sheet-bg';
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="Nouvelle mission"><h2>Nouvelle mission</h2>${adderHTML('f-sheet')}<button class="btn ghost sm" type="button" data-act="sheet-close" style="align-self:flex-end">Fermer</button></div>`;
+  document.body.appendChild(bg);
+  bindAdder('f-sheet', closeSheet);
+  setTimeout(() => $('#f-sheet-title').focus(), 50);
+}
+function closeSheet() { const s = $('.sheet-bg'); if (s) s.remove(); }
+
+function bindView(view) {
+  const on = (sel, fn) => { const f = $(sel); if (f) f.addEventListener('submit', (e) => { e.preventDefault(); fn(); }); };
+  bindAdder('f-task');
+  on('#f-ms', async () => {
+    const title = $('#m-title').value.trim(), date = $('#m-date').value; if (!title || !date) return;
+    if (await write((db) => db.collection('milestones').add({ title, date, done: false, createdAt: Date.now() }))) $('#m-title').value = '';
+  });
+  on('#f-obj', async () => {
+    const title = $('#o-title').value.trim(); if (!title) return;
+    const ob = $('#f-obj [data-pick="owner"] [aria-pressed="true"]');
+    if (await write((db) => db.collection('objectives').add({ title, metric: $('#o-metric').value.trim(), due: $('#o-date').value || '', owner: ob ? ob.dataset.v : 'duo', progress: 0, createdAt: Date.now() }))) { $('#o-title').value = ''; $('#o-metric').value = ''; }
+  });
+  on('#f-tiers', async () => {
+    const uniq = Array.from(new Set($('#tiers-in').value.split(/[,;\s]+/).map(num).filter((n) => n > 0))).sort((a, b) => a - b).slice(0, 10);
+    if (uniq.length && await write((db) => db.doc('config/main').set(Object.assign({}, S.config, { tiers: uniq })))) toast('Paliers', uniq.map(eur).join(' · '));
+  });
+  on('#f-prod', async () => {
+    const name = $('#p-name').value.trim(); if (!name) return;
+    if (await write((db) => db.collection('products').add({ name, kind: $('#p-kind').value, price: num($('#p-price').value), stage: 'idee', createdAt: Date.now() }))) { $('#p-name').value = ''; $('#p-price').value = ''; }
+  });
+  on('#f-rev', async () => {
+    const client = $('#r-client').value.trim(), amount = num($('#r-amount').value); if (!client || !amount) return;
+    const kind = $('#r-kind').value, before = compute();
+    if (await write((db) => db.collection('revenue').add({ client, productId: $('#r-prod').value, kind, amount, active: true, createdAt: Date.now() }))) {
+      $('#r-client').value = ''; $('#r-amount').value = '';
+      const unlocked = kind === 'mensuel' ? before.T.filter((a) => before.mrr < a && before.mrr + amount >= a) : [];
+      if (unlocked.length) { const a = unlocked[unlocked.length - 1]; levelUp(eur(a), 'Palier ' + TIER_NAMES[before.T.indexOf(a)] + ' franchi', 'MRR'); }
+      else toast(kind === 'mensuel' ? 'MRR +' + eur(amount) : 'Encaissé', client);
+    }
+  });
+  if (view === 'cockpit') Orb.mount($('#orb'), $('#orbCanvas')); else Orb.unmount();
+}
+
+function toast(title, text) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<b>${esc(title)}</b><span>${esc(text || '')}</span>`;
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 450); }, 2800);
+}
+function levelUp(big, sub, kicker) {
+  const o = document.createElement('div');
+  o.className = 'lvlup';
+  o.innerHTML = `<div><p class="eyebrow">${esc(kicker || 'Niveau supérieur')}</p><strong class="num">${esc(String(big))}</strong><em>${esc(sub)}</em></div>`;
+  document.body.appendChild(o);
+  setTimeout(() => o.remove(), 2700);
+}
+/* Thème : sombre par défaut, le choix reste dans ce navigateur */
+const THEME_KEY = 'nobrayn-cockpit-theme';
+function setTheme(t, save) {
+  if (t === 'light') document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme;
+  if (save) { try { localStorage.setItem(THEME_KEY, t); } catch (e) {} }
+  try { Orb.theme(t === 'light'); } catch (e) {} // Orb pas encore créé au premier appel
+}
+try { setTheme(localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark', false); } catch (e) {}
+$('#themeBtn').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light', true));
+
+function tick() { const d = new Date(); $('#clock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+tick(); setInterval(tick, 10000);
+
+/* ================= Le cœur 3D (Three.js) =================
+   Le gyroscope Nobrayn au centre. Les missions ouvertes gravitent en blanc,
+   celles faites aujourd'hui en rouge sur l'orbite intérieure. */
+const Orb = (() => {
+  // Three.js auto-hébergé à côté du site (dossier nobrain/vendor), aucun CDN
+  const VENDOR = new URL('../nobrain/vendor/three.module.min.js', location.href).href;
+  let THREE = null, mountToken = 0;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let light = document.documentElement.dataset.theme === 'light', metal = null, orbitMats = [];
+  let wrap = null, canvas = null, renderer = null, scene, camera, group, core, glow, ringA, ringB, openGroup, doneGroup, stars;
+  let rafId = 0, visible = true, io = null, ro = null, nOpen = 0, nDone = 0, pulse = 0, mx = 0, my = 0, t0 = performance.now();
+  function glowTexture() {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,80,60,0.9)'); gr.addColorStop(0.35, 'rgba(255,51,38,0.35)'); gr.addColorStop(1, 'rgba(255,51,38,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return tx;
+  }
+  function orbitLine(r, op) {
+    const pts = []; for (let i = 0; i <= 128; i++) { const a = i / 128 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r)); }
+    const mat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: op }); mat.userData.op = op; orbitMats.push(mat);
+    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat);
+  }
+  function build() {
+    scene = new THREE.Scene(); orbitMats = [];
+    camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100); camera.position.set(0, 1.1, 10.5); camera.lookAt(0, 0, 0);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(4, 6, 6); scene.add(key);
+    const rim = new THREE.PointLight(0xff3326, 5, 12, 0); rim.position.set(-3, -1, 2); scene.add(rim);
+    group = new THREE.Group(); scene.add(group);
+    core = new THREE.Mesh(new THREE.SphereGeometry(0.62, 64, 64), new THREE.MeshStandardMaterial({ color: 0xff3326, emissive: 0x5a0703, roughness: 0.32, metalness: 0.15 }));
+    group.add(core);
+    glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    glow.scale.set(4.2, 4.2, 1); group.add(glow);
+    metal = new THREE.MeshStandardMaterial({ color: 0xdedcd5, roughness: 0.28, metalness: 0.85 });
+    const red = new THREE.MeshStandardMaterial({ color: 0xc8170c, emissive: 0x3a0402, roughness: 0.35, metalness: 0.5 });
+    ringA = new THREE.Mesh(new THREE.TorusGeometry(1.32, 0.045, 24, 160), metal);
+    ringB = new THREE.Mesh(new THREE.TorusGeometry(1.08, 0.06, 24, 160), red);
+    group.add(ringA, ringB);
+    const orbits = new THREE.Group(); orbits.rotation.set(0.32, 0, -0.12);
+    orbits.add(orbitLine(2.35, 0.09), orbitLine(1.85, 0.05));
+    openGroup = new THREE.Group(); doneGroup = new THREE.Group(); orbits.add(openGroup, doneGroup);
+    group.add(orbits);
+    const sp = []; for (let i = 0; i < 420; i++) { const r = 7 + Math.random() * 10, a = Math.random() * Math.PI * 2, b = Math.acos(2 * Math.random() - 1); sp.push(r * Math.sin(b) * Math.cos(a), r * Math.sin(b) * Math.sin(a) * 0.6, -Math.abs(r * Math.cos(b))); }
+    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+    stars = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffffff, size: 0.035, transparent: true, opacity: 0.55, depthWrite: false }));
+    scene.add(stars);
+    syncSatellites(); paint();
+  }
+  // Sur fond clair : orbites, étoiles et missions passent à l'encre, le halo n'est plus additif
+  function paint() {
+    if (!scene) return;
+    const ink = light ? 0x16161b : 0xffffff;
+    orbitMats.forEach((m) => { m.color.setHex(ink); m.opacity = m.userData.op * (light ? 2.2 : 1); });
+    stars.material.color.setHex(ink); stars.material.opacity = light ? 0.28 : 0.55;
+    metal.color.setHex(light ? 0x2a2a30 : 0xdedcd5);
+    glow.material.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending; glow.material.opacity = light ? 0.55 : 1; glow.material.needsUpdate = true;
+    if (openGroup) openGroup.children.forEach((m) => { m.material.color.setHex(light ? 0x1a1a20 : 0xf3f2ee); m.material.emissive.setHex(light ? 0x000000 : 0x222222); });
+  }
+  function syncSatellites() {
+    if (!openGroup) return;
+    const mk = (grp, n, r, color, size, emissive) => {
+      while (grp.children.length > n) grp.remove(grp.children[grp.children.length - 1]);
+      while (grp.children.length < n) {
+        const m = new THREE.Mesh(new THREE.SphereGeometry(size, 20, 20), new THREE.MeshStandardMaterial({ color, emissive, roughness: 0.4, metalness: 0.1 }));
+        grp.add(m);
+      }
+      grp.children.forEach((m, i) => { m.userData.a = i / Math.max(1, n) * Math.PI * 2; m.userData.r = r; });
+    };
+    mk(openGroup, Math.min(nOpen, 18), 2.35, 0xf3f2ee, 0.07, 0x222222);
+    mk(doneGroup, Math.min(nDone, 12), 1.85, 0xff3326, 0.085, 0x7a0b06);
+    paint();
+  }
+  function resize() {
+    if (!renderer || !wrap) return;
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.position.z = w < 420 ? 12.5 : 10.5;
+    camera.updateProjectionMatrix();
+  }
+  function frame(now) {
+    rafId = 0;
+    if (!renderer) return;
+    const t = (now - t0) / 1000;
+    ringA.rotation.set(t * 0.55, t * 0.35, 0.3);
+    ringB.rotation.set(Math.PI / 2 + Math.sin(t * 0.4) * 0.5, t * 0.7, t * 0.25);
+    openGroup.children.forEach((m) => { const a = m.userData.a + t * 0.18; m.position.set(Math.cos(a) * m.userData.r, Math.sin(a * 2) * 0.06, Math.sin(a) * m.userData.r); });
+    doneGroup.children.forEach((m) => { const a = m.userData.a - t * 0.32; m.position.set(Math.cos(a) * m.userData.r, 0, Math.sin(a) * m.userData.r); });
+    if (pulse > 0) pulse = Math.max(0, pulse - 0.02);
+    const s = 1 + Math.sin(t * 2) * 0.025 + pulse * 0.35;
+    core.scale.setScalar(s); glow.scale.setScalar(4.2 + pulse * 3 + Math.sin(t * 2) * 0.15);
+    group.rotation.y += ((mx * 0.35) - group.rotation.y) * 0.05;
+    group.rotation.x += ((my * 0.2) - group.rotation.x) * 0.05;
+    stars.rotation.y = t * 0.01;
+    renderer.render(scene, camera);
+    if (visible && !document.hidden && !reduce) rafId = requestAnimationFrame(frame);
+  }
+  function start() { if (!rafId && renderer) rafId = requestAnimationFrame(frame); }
+  window.addEventListener('pointermove', (e) => { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5; });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
+  return {
+    async mount(w, c) {
+      wrap = w; canvas = c;
+      const token = ++mountToken;
+      if (!THREE) { try { THREE = window.THREE || await import(VENDOR); } catch (e) { return; } } // sinon le gyroscope CSS reste affiché
+      if (token !== mountToken || !wrap) return;
+      try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' }); } catch (e) { renderer = null; return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      wrap.classList.add('has-3d');
+      build(); resize();
+      if ('ResizeObserver' in window) { ro = new ResizeObserver(resize); ro.observe(wrap); }
+      if ('IntersectionObserver' in window) { io = new IntersectionObserver((en) => { visible = en.some((x) => x.isIntersecting); if (visible) start(); }); io.observe(wrap); }
+      start();
+    },
+    unmount() {
+      mountToken++;
+      if (rafId) cancelAnimationFrame(rafId); rafId = 0;
+      if (io) io.disconnect(); if (ro) ro.disconnect(); io = ro = null;
+      if (renderer) { renderer.dispose(); renderer = null; }
+      openGroup = doneGroup = null; wrap = canvas = null;
+    },
+    feed(C) { const o = C.open.length, d = C.today.n; if (o !== nOpen || d !== nDone) { nOpen = o; nDone = d; syncSatellites(); if (reduce) start(); } },
+    pulse() { pulse = 1; start(); },
+    theme(isLight) { light = isLight; paint(); start(); }
+  };
+})();
+
+boot();
+})();
+</script>
+</body></html>
