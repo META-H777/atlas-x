@@ -97,22 +97,14 @@
         <span class="line">chose<i>.</i></span>
       </h1>
 
-      <aside class="todo" aria-label="Votre liste du jour">
-        <header class="todo-head">
-          <span>À penser aujourd'hui</span>
-          <button class="replay" id="replay" type="button" aria-label="Rejouer">↺</button>
-        </header>
-        <ol class="todo-list" id="todo">
-          <li>Mettre le site à jour</li>
-          <li>Répondre aux avis Google</li>
-          <li>Relancer le devis Martin</li>
-          <li>Poster quelque chose sur Insta</li>
-          <li>Rappeler le numéro de 8 h 02</li>
-          <li>Être trouvé sur ChatGPT&nbsp;?</li>
-          <li>Faire les factures ce soir</li>
-          <li class="keep">Votre métier</li>
-        </ol>
-      </aside>
+      <figure class="promo" id="promo">
+        <div class="todo-head promo-head"><span>La présentation</span><span>0:32 · avec le son</span></div>
+        <button class="promo-play" id="promoPlay" type="button" aria-haspopup="dialog" aria-label="Voir la présentation de Nobrayn, 32 secondes, avec le son">
+          <canvas id="promoPreview" width="960" height="540" aria-hidden="true"></canvas>
+          <span class="promo-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </button>
+        <p class="promo-foot"><span>Tout ce qu'on raye pour vous</span><button type="button" class="promo-link" data-promo-open>Lancer ▶</button></p>
+      </figure>
 
       <p class="hero-sub">
         Il y a ce que vous savez faire mieux que personne.
@@ -340,6 +332,7 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="presentation.js" defer></script>
   <script type="module" src="machine.js"></script>
 </body>
 </html>

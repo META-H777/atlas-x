@@ -35,7 +35,7 @@
 
   // ---------- Liste du hero : on raye tout, sauf le métier ----------
   var todo = document.getElementById('todo');
-  var items = Array.prototype.slice.call(todo.querySelectorAll('li'));
+  var items = todo ? Array.prototype.slice.call(todo.querySelectorAll('li')) : [];
   var timers = [];
   function playTodo() {
     timers.forEach(clearTimeout); timers = [];
@@ -48,8 +48,10 @@
       }, delay + i * step));
     });
   }
-  playTodo();
-  document.getElementById('replay').addEventListener('click', playTodo);
+  if (todo) {
+    playTodo();
+    document.getElementById('replay').addEventListener('click', playTodo);
+  }
 
   // ---------- Compteur « En tête » + lignes rayées ----------
   var meter = document.getElementById('meter');
