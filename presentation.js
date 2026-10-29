@@ -584,7 +584,7 @@ function build() {
       <button type="button" class="lb-play" aria-label="Pause">Pause</button>
       <div class="lb-prog" aria-hidden="true"><i></i></div>
       <span class="lb-time">0:00 / ${fmt(TOTAL)}</span>
-      <button type="button" class="lb-mute" aria-pressed="false">Son</button>
+      <button type="button" class="lb-mute" aria-pressed="false">Couper le son</button>
       <button type="button" class="lb-full" aria-label="Plein écran">⤢</button>
       <a class="lb-cta" href="#contact" hidden>Nous écrire →</a>
       <button type="button" class="lb-close" aria-label="Fermer">✕</button>
@@ -593,7 +593,7 @@ function build() {
   stage = lb.querySelector('.lb-stage'); cv = stage.querySelector('canvas'); draw = makeRenderer(cv);
   playBtn = lb.querySelector('.lb-play'); muteBtn = lb.querySelector('.lb-mute'); timeEl = lb.querySelector('.lb-time'); progEl = lb.querySelector('.lb-prog i'); endLink = lb.querySelector('.lb-cta');
   playBtn.addEventListener('click', () => (playing ? pause() : clock && clock() >= TOTAL ? start() : resume()));
-  muteBtn.addEventListener('click', () => { muted = !muted; muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false'); muteBtn.textContent = muted ? 'Muet' : 'Son'; if (outGain) outGain.gain.setValueAtTime(muted ? 0 : 1, ac.currentTime); });
+  muteBtn.addEventListener('click', () => { muted = !muted; muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false'); muteBtn.textContent = muted ? 'Activer le son' : 'Couper le son'; if (outGain) outGain.gain.setValueAtTime(muted ? 0 : 1, ac.currentTime); });
   if (!document.fullscreenEnabled) lb.querySelector('.lb-full').hidden = true;
   lb.querySelector('.lb-full').addEventListener('click', () => {
     if (document.fullscreenElement) { document.exitFullscreen(); return; }
@@ -608,19 +608,37 @@ function build() {
     else if (e.key === 'Tab') { const f = [...lb.querySelectorAll('button:not([hidden]), a:not([hidden])')]; const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
   });
 }
-function stopAudio() { if (ac) { try { ac.close(); } catch (e) {} } ac = null; outGain = null; }
+// iPhone : le son Web Audio est coupé par le bouton silencieux tant qu'aucun média n'est en lecture.
+// On joue en boucle une piste inaudible pour passer en mode « lecture » (et on le demande à Safari quand il sait faire).
+let silent = null;
+function silentUrl() {
+  const sr = 8000, n = sr / 2, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, i % 2 ? 1 : -1, true);
+  return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+}
+function unlockAudio() {
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try {
+    if (!silent) { silent = document.createElement('audio'); silent.src = silentUrl(); silent.loop = true; silent.preload = 'auto'; silent.setAttribute('playsinline', ''); silent.setAttribute('x-webkit-airplay', 'deny'); }
+    const pl = silent.play(); if (pl && pl.catch) pl.catch(() => {});
+  } catch (e) {}
+}
+function stopAudio() { if (silent) silent.pause(); if (ac) { try { ac.close(); } catch (e) {} } ac = null; outGain = null; }
 function start() {
-  stopAudio(); endLink.hidden = true;
+  stopAudio(); endLink.hidden = true; unlockAudio();
   try {
     const AC = window.AudioContext || window.webkitAudioContext;
     ac = new AC(); outGain = ac.createGain(); outGain.gain.value = muted ? 0 : 1; outGain.connect(ac.destination);
     const t0 = ac.currentTime + 0.15; Music.build(ac, t0, outGain); clock = () => ac.currentTime - t0;
-    if (ac.state === 'suspended') ac.resume();
+    ac.resume();
   } catch (e) { ac = null; perf0 = performance.now() + 150; pausedAt = 0; clock = () => (playing ? (performance.now() - perf0) / 1000 : pausedAt); }
   playing = true; playBtn.textContent = 'Pause'; playBtn.setAttribute('aria-label', 'Pause'); loop();
 }
-function pause() { if (!playing) return; if (ac) ac.suspend(); else pausedAt = clock(); playing = false; playBtn.textContent = 'Lecture'; playBtn.setAttribute('aria-label', 'Lecture'); }
-function resume() { if (playing || !clock) return; if (ac) ac.resume(); else perf0 = performance.now() - pausedAt * 1000; playing = true; playBtn.textContent = 'Pause'; playBtn.setAttribute('aria-label', 'Pause'); loop(); }
+function pause() { if (!playing) return; if (silent) silent.pause(); if (ac) ac.suspend(); else pausedAt = clock(); playing = false; playBtn.textContent = 'Lecture'; playBtn.setAttribute('aria-label', 'Lecture'); }
+function resume() { if (playing || !clock) return; if (ac) { unlockAudio(); ac.resume(); } else perf0 = performance.now() - pausedAt * 1000; playing = true; playBtn.textContent = 'Pause'; playBtn.setAttribute('aria-label', 'Pause'); loop(); }
 function loop() {
   if (raf) cancelAnimationFrame(raf);
   const step = () => {
