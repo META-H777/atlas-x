@@ -621,3 +621,9 @@ html.show-grid .grid-overlay { opacity: 1; }
   .promo-btn::before { animation: none; }
   .promo-play canvas { transition: none; }
 }
+
+/* ---------- Lecteur : format vertical plein écran sur téléphone ---------- */
+.lb.vert { padding: 0; gap: 0; background: #0b0b0b; }
+.lb.vert .lb-stage { width: 100vw; height: 100vh; height: 100dvh; aspect-ratio: auto; box-shadow: none; background: #0b0b0b; }
+.lb.vert .lb-bar { position: absolute; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); width: auto; padding: 8px; border-radius: 14px; background: rgba(11, 11, 11, .78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.lb.vert .lb-time { display: none; }
