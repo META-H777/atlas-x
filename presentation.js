@@ -466,7 +466,7 @@ const Music = (() => {
       const st = at(tEnd - dur), en = at(tEnd), s = noiseSrc(st, en + 0.01, true), f = filt('bandpass', 360, 1.2), e = ac.createGain();
       f.frequency.setValueAtTime(360, st); f.frequency.exponentialRampToValueAtTime(5600, en);
       const curve = new Float32Array(64); for (let i = 0; i < 64; i++) curve[i] = g * Math.pow(i / 63, 2.2);
-      e.gain.setValueAtTime(0, st); e.gain.setValueCurveAtTime(curve, st, dur * 0.999); e.gain.setValueAtTime(0, en);
+      e.gain.value = 0; e.gain.setValueCurveAtTime(curve, st, dur * 0.999); e.gain.setValueAtTime(0, en); // Safari refuse une courbe qui chevauche un autre réglage
       s.connect(f); f.connect(e); e.connect(dry); const sg = gainNode(0.7); e.connect(sg); sg.connect(send);
     }
     function impact(a, g = 0.35) {
@@ -476,6 +476,11 @@ const Music = (() => {
       const s = noiseSrc(st, st + 1.6, true), f = filt('lowpass', 2500), ae = ac.createGain();
       ae.gain.setValueAtTime(g * 0.25, st); ae.gain.setTargetAtTime(0, st, 1 / 3.5); s.connect(f); f.connect(ae); ae.connect(send);
     }
+
+    // Un instrument qui échoue (navigateur plus strict) ne doit pas couper toute la musique
+    let fails = 0;
+    const guard = (f) => (...args) => { try { f(...args); } catch (e) { if (!fails++) console.warn('Nobrayn audio :', e); } };
+    pad = guard(pad); bass = guard(bass); pluck = guard(pluck); bell = guard(bell); kick = guard(kick); hat = guard(hat); clap = guard(clap); tick = guard(tick); riser = guard(riser); impact = guard(impact);
 
     // ---------- partition (identique à la vidéo) ----------
     const Am = [57, 60, 64, 67, 71], F = [53, 57, 60, 64], C = [48, 55, 60, 64, 67], G = [55, 59, 62, 67], E = [52, 56, 59, 64];
