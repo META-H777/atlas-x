@@ -133,6 +133,8 @@ em.r, .r { color: var(--red); font-style: normal; }
 .vic:not(.won) h3 { color: var(--fg-2); }
 .vic-add { grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) auto; margin-top: 18px; }
 .journal .gain.hot { color: var(--red); font-weight: 600; }
+.agency.loop { aspect-ratio: 16 / 9; min-height: 0; padding: 0; display: block; }
+.agency.loop canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @media (max-width: 760px) {
   .agency { aspect-ratio: auto; min-height: 340px; display: flex; flex-direction: column; padding: 28px 0 18px; }
   .agency-center { position: relative; inset: auto; flex: 1; }
@@ -777,11 +779,7 @@ const SKELETON = {
     </section>
     <section class="stats" id="ck-stats"></section>
     <section class="sec"><div class="sec-head"><h2>Agence virtuelle</h2><span class="link">Bientôt en direct</span></div>
-      <div class="agency" role="img" aria-label="Écran de l'agence virtuelle, encore vide">
-        <div class="agency-floor"></div>
-        <div class="agency-center"><span class="agency-state"><i></i>Hors ligne</span><p>Vos agents IA apparaîtront ici, en 3D et en temps réel.</p></div>
-        <div class="agency-roster">${AGENTS.map((a) => `<span><i></i>${esc(a)}</span>`).join('')}</div>
-      </div></section>
+      <div class="agency loop" role="img" aria-label="Boucle Nobrayn : la liste des tâches de l'artisan se raye, il ne reste rien en tête."><canvas id="agencyLoop" width="1920" height="1080"></canvas></div></section>
     <section class="sec"><div class="sec-head"><h2>Route du MRR</h2><a href="#produits">Contrats →</a></div><div class="route" id="ck-route"></div></section>
     <section class="sec two">
       <div><div class="sec-head"><h2>À faire maintenant</h2><a href="#todo">Tout voir →</a></div><div class="list" id="ck-next"></div></div>
@@ -1052,6 +1050,95 @@ const FILL = {
     $('#pr-sum').innerHTML = `MRR <b style="color:var(--fg)">${eur(C.mrr)} / mois</b> · encaissé ponctuel ${eur(C.cash)} · ${plural(prods.filter((p) => p.stage === 'vente').length, 'produit')} en vente.`;
   }
 };
+
+/* ================= Boucle de l'agence virtuelle (en attendant la vraie agence 3D) ================= */
+const AgencyLoop = (() => {
+  const W = 1920, H = 1080, L = 4, RED = '#ff3326', MONO = '"IBM Plex Mono", monospace', SANS = '"Inter Tight", sans-serif';
+  const ITEMS = ['Devis', 'Relances clients', 'Avis Google', 'Site & SEO', 'Factures', 'Agenda'];
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const STARS = Array.from({ length: 140 }, () => ({ x: rnd() * W, y: rnd() * H * 0.62, r: 0.6 + rnd() * 1.6, k: 1 + Math.floor(rnd() * 3), p: rnd() * 6.28 }));
+  const ease = (x) => x <= 0 ? 0 : x >= 1 ? 1 : 1 - Math.pow(1 - x, 3);
+  function draw(ctx, t) {
+    const ph = t / L;
+    ctx.fillStyle = '#07070a'; ctx.fillRect(0, 0, W, H);
+    const g = ctx.createRadialGradient(W * 0.62, H * 1.05, 0, W * 0.62, H * 1.05, H * 0.95);
+    g.addColorStop(0, 'rgba(255,51,38,0.22)'); g.addColorStop(1, 'rgba(255,51,38,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#f3f2ee';
+    STARS.forEach((s) => { ctx.globalAlpha = 0.25 + 0.45 * (0.5 + 0.5 * Math.sin(s.p + ph * 6.2832 * s.k)); ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832); ctx.fill(); });
+    ctx.globalAlpha = 1;
+    const hz = H * 0.6, vx = W * 0.62;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, hz, W, H - hz); ctx.clip();
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1.2;
+    for (let i = -24; i <= 24; i++) { ctx.beginPath(); ctx.moveTo(vx + i * 14, hz); ctx.lineTo(vx + i * 260, H); ctx.stroke(); }
+    for (let j = 0; j < 14; j++) {
+      const z = j + 1 - ph; if (z <= 0) continue;
+      const y = hz + (H - hz) * (1 / (z * 0.55 + 0.45)) * 0.9; if (y > H || y < hz) continue;
+      ctx.globalAlpha = clamp((y - hz) / (H - hz) * 1.6, 0, 1);
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+    const fade = ctx.createLinearGradient(0, hz, 0, hz + 160); fade.addColorStop(0, '#07070a'); fade.addColorStop(1, 'rgba(7,7,10,0)');
+    ctx.fillStyle = fade; ctx.fillRect(0, hz, W, 160);
+    ctx.font = '500 22px ' + MONO; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(243,242,238,0.55)';
+    ctx.fillText('NOBRAYN  ·  PILOTE AUTOMATIQUE', 160, 120);
+    const blink = 0.5 + 0.5 * Math.cos(ph * 6.2832 * 2);
+    ctx.fillStyle = RED; ctx.globalAlpha = 0.6 + 0.4 * blink; ctx.beginPath(); ctx.arc(W - 330, 120, 7, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = 'rgba(243,242,238,0.55)'; ctx.fillText('EN DIRECT', W - 310, 120);
+    const reset = ease((t - 3.35) / 0.55);
+    ctx.font = '500 20px ' + MONO; ctx.fillStyle = 'rgba(243,242,238,0.45)';
+    ctx.fillText("À PENSER AUJOURD'HUI", 160, 300);
+    ctx.fillStyle = 'rgba(243,242,238,0.15)'; ctx.fillRect(160, 326, 520, 2);
+    let left = ITEMS.length;
+    ITEMS.forEach((it, i) => {
+      const y = 388 + i * 74, s0 = 0.35 + i * 0.34, p = ease((t - s0) / 0.28) * (1 - reset);
+      if (t >= s0 + 0.14 && reset < 0.5) left--;
+      ctx.font = '500 46px ' + SANS; ctx.fillStyle = `rgba(243,242,238,${1 - 0.68 * p})`;
+      ctx.fillText(it, 160, y);
+      const w = ctx.measureText(it).width;
+      if (p > 0) { ctx.fillStyle = RED; ctx.fillRect(152, y - 3, (w + 16) * p, 6); }
+      ctx.font = '500 18px ' + MONO; ctx.fillStyle = `rgba(243,242,238,${0.35 * (1 - p)})`;
+      ctx.fillText('0' + (i + 1), 104, y + 2);
+    });
+    const lx = 900, ly = 470;
+    ctx.font = '800 210px ' + SANS; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#f3f2ee';
+    ctx.fillText('no', lx, ly + 70);
+    const wNo = ctx.measureText('no').width;
+    ctx.fillText('brayn', lx + wNo, ly + 70);
+    const wBr = ctx.measureText('brayn').width;
+    ctx.fillStyle = RED; ctx.fillText('.', lx + wNo + wBr, ly + 70);
+    const glow = 0.5 + 0.5 * Math.sin(ph * 6.2832);
+    ctx.save(); ctx.shadowColor = RED; ctx.shadowBlur = 18 + 26 * glow; ctx.fillStyle = RED; ctx.fillRect(lx + wNo - 8, ly + 6, wBr + 16, 20); ctx.restore();
+    ctx.textBaseline = 'middle';
+    ctx.font = '500 24px ' + MONO; ctx.fillStyle = 'rgba(243,242,238,0.5)';
+    ctx.fillText('EN TÊTE', lx + 8, ly + 150);
+    ctx.font = '800 64px ' + SANS; ctx.fillStyle = left === 0 ? RED : '#f3f2ee';
+    ctx.fillText('0' + left, lx + 150, ly + 152);
+    ctx.font = '500 44px ' + SANS;
+    const outA = ease((t - 2.35) / 0.2) * (1 - ease((t - 3.6) / 0.25));
+    const inB = ease((t - 2.55) / 0.3) * (1 - ease((t - 3.35) / 0.25));
+    ctx.fillStyle = `rgba(243,242,238,${0.45 * (1 - outA)})`;
+    ctx.fillText('On s’en occupe.', lx + 300, ly + 152 + 14 * outA);
+    ctx.fillStyle = `rgba(243,242,238,${inB})`;
+    ctx.fillText('Pensez à autre chose.', lx + 300, ly + 152 - 14 * (1 - inB));
+  }
+  const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let t0 = null, lastStill = null;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const c = document.getElementById('agencyLoop');
+    if (!c || document.hidden) return;
+    const r = c.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return; // hors écran : on ne dessine pas
+    const ctx = c.getContext('2d');
+    if (still) { if (lastStill !== c) { draw(ctx, 2.9); lastStill = c; } return; }
+    if (t0 === null) t0 = now;
+    draw(ctx, ((now - t0) / 1000) % L);
+  }
+  const start = () => requestAnimationFrame(frame);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+  return { draw };
+})();
 
 /* ================= Interactions ================= */
 function celebrate(kind, label) { toast(kind, label); }
