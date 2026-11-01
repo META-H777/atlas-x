@@ -465,6 +465,52 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; bo
 
 .foot { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding-block: 28px 44px; font-size: 13px; color: var(--fg-3); }
 
+/* ---------- Réunions ---------- */
+.mt-layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 44px; }
+.mt-side { position: sticky; top: 92px; }
+.mt-list { display: flex; flex-direction: column; gap: 8px; }
+.mt-item { display: block; text-align: left; width: 100%; padding: 16px 18px; border-radius: var(--r-md); background: var(--surface); transition: background .25s; }
+.mt-item:hover { background: var(--surface-2); }
+.mt-item[aria-current="true"] { background: var(--surface-3); box-shadow: inset 3px 0 0 var(--red); }
+.mt-item .d { font-family: var(--mono); font-size: 12px; color: var(--fg-3); letter-spacing: .02em; }
+.mt-item b { display: block; margin-top: 4px; font-size: 15px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.mt-item span.s { display: block; margin-top: 4px; font-size: 13px; color: var(--fg-2); line-height: 1.4; }
+.mt-view { padding: 34px 38px 40px; border-radius: var(--r-lg); background: var(--surface); min-width: 0; }
+.mt-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-start; justify-content: space-between; }
+.mt-head h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05; max-width: 22ch; overflow-wrap: anywhere; }
+.mt-meta { margin-top: 10px; font-size: 14px; color: var(--fg-2); }
+.mt-meta a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+.mt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.mt-actions .del { align-self: center; }
+.mt-view:hover .del { opacity: 1; }
+.mt-body { margin-top: 28px; font-size: 16px; line-height: 1.6; max-width: 76ch; overflow-wrap: anywhere; }
+.mt-body > * + * { margin-top: 14px; }
+.mt-body h3 { margin-top: 34px; font-size: 22px; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; }
+.mt-body h4 { margin-top: 24px; font-size: 17px; font-weight: 700; letter-spacing: -.015em; }
+.mt-body h3:first-child, .mt-body h4:first-child { margin-top: 0; }
+.mt-body ul, .mt-body ol { padding-left: 22px; }
+.mt-body ul { list-style: disc; }
+.mt-body ol { list-style: decimal; }
+.mt-body li + li { margin-top: 6px; }
+.mt-body li::marker { color: var(--red); }
+.mt-body strong { font-weight: 650; color: var(--fg); }
+.mt-body a { text-decoration: underline; text-underline-offset: 3px; }
+.mt-body code { font-family: var(--mono); font-size: .9em; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); }
+.mt-table { overflow-x: auto; margin-inline: -4px; }
+.mt-body table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; }
+.mt-body th, .mt-body td { overflow-wrap: normal; word-break: normal; hyphens: manual; text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid rgb(var(--ink-rgb) / .09); }
+.mt-body th { white-space: nowrap; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-3); }
+.mt-form { display: grid; gap: 12px; margin-top: 22px; }
+.mt-form .row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 12px; }
+.mt-form textarea.in { height: auto; min-height: 420px; padding: 14px 16px; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; resize: vertical; }
+.mt-form .hint { font-size: 13px; color: var(--fg-3); }
+@media (max-width: 860px) {
+  .mt-layout { grid-template-columns: minmax(0, 1fr); }
+  .mt-side { position: static; }
+  .mt-view { padding: 24px 20px 28px; }
+  .mt-form .row { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -506,6 +552,7 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; bo
       <a class="pill" href="#planning">Planning</a>
       <a class="pill" href="#objectifs">Vision</a>
       <a class="pill" href="#produits">Produits</a>
+      <a class="pill" href="#reunions">Réunions</a>
     </nav>
     <div class="me">
       <button class="theme-btn" id="themeBtn" type="button" title="Thème clair / sombre" aria-label="Basculer thème clair / sombre"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg></button>
@@ -569,7 +616,7 @@ const STAGES = [['idee', 'Idée'], ['test', 'En test'], ['vente', 'En vente']];
 const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 const MONTHS_FULL = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-const S = { tasks: [], milestones: [], objectives: [], products: [], revenue: [], victories: [], players: {}, config: {}, db: null, uid: null, handle: null, canWrite: true, online: false, view: null };
+const S = { tasks: [], milestones: [], objectives: [], products: [], revenue: [], victories: [], meetings: [], meetSel: null, meetEdit: null, meetKey: '', players: {}, config: {}, db: null, uid: null, handle: null, canWrite: true, online: false, view: null };
 const ls = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -696,7 +743,7 @@ function LocalDB() {
     load(data) { store = JSON.parse(JSON.stringify(data)); persist(); notify(); }
   };
 }
-const COLLS = ['tasks', 'milestones', 'objectives', 'products', 'revenue', 'victories'];
+const COLLS = ['tasks', 'milestones', 'objectives', 'products', 'revenue', 'victories', 'meetings'];
 async function write(fn) {
   if (!S.db) { toast('Hors ligne', 'Impossible d\'enregistrer ici.'); return false; }
   if (!S.canWrite) { toast('Lecture seule', 'Demandez un accès Éditeur à Romain.'); return false; }
@@ -770,9 +817,11 @@ async function importData(file) {
 let raf = 0;
 function scheduleRender() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); }
 function route() {
-  const v = (location.hash || '#cockpit').slice(1);
-  const view = ['cockpit', 'todo', 'planning', 'objectifs', 'produits'].includes(v) ? v : 'cockpit';
+  const [v, sub] = (location.hash || '#cockpit').slice(1).split('/');
+  const view = ['cockpit', 'todo', 'planning', 'objectifs', 'produits', 'reunions'].includes(v) ? v : 'cockpit';
+  if (view === 'reunions') { S.meetSel = sub || null; S.meetEdit = null; }
   document.querySelectorAll('.pill').forEach((a) => a.setAttribute('aria-current', a.getAttribute('href') === '#' + view ? 'page' : 'false'));
+  const cur = document.querySelector('.pill[aria-current="page"]'); if (cur && cur.scrollIntoView) try { cur.scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (e) {}
   if (view !== S.view) {
     S.view = view;
     const main = $('#view');
@@ -891,7 +940,13 @@ const SKELETON = {
         <select class="in" id="r-kind" aria-label="Type"><option value="mensuel">Mensuel</option><option value="ponctuel">Ponctuel</option></select>
         <input class="in num" id="r-amount" inputmode="decimal" required placeholder="Montant €" aria-label="Montant">
         <button class="btn red" type="submit">Encaisser</button>
-      </form></section>`
+      </form></section>`,
+  reunions: () => `
+    <section class="page-title"><h1>Réunions<i>.</i></h1><p id="mt-sum"></p></section>
+    <div class="mt-layout">
+      <div class="mt-side"><button class="btn red" type="button" data-act="mt-new" style="width:100%; margin-bottom:12px">Nouvelle réunion</button><nav class="mt-list" id="mt-list" aria-label="Comptes rendus"></nav></div>
+      <article class="mt-view" id="mt-view"></article>
+    </div>`
 };
 function adderHTML(id = 'f-task') {
   return `<form class="adder" id="${id}">
@@ -1089,6 +1144,125 @@ const FILL = {
     $('#pr-sum').innerHTML = `MRR <b style="color:var(--fg)">${eur(C.mrr)} / mois</b> · encaissé ponctuel ${eur(C.cash)} · ${plural(prods.filter((p) => p.stage === 'vente').length, 'produit')} en vente.`;
   }
 };
+
+/* ---------- Réunions : comptes rendus en Markdown (rendu sûr, sans HTML brut) ---------- */
+const MEETING_TEMPLATE = `## Les grandes lignes
+
+- 
+
+## Organisation de la semaine
+
+| Qui | Rythme | Au programme |
+| --- | --- | --- |
+| Romain |  |  |
+| P'A |  |  |
+
+## Objectifs et actions de la semaine
+
+**Grand objectif :** 
+
+| Action | Qui | Échéance |
+| --- | --- | --- |
+|  |  |  |
+
+## Synthèse de ce qui a été vu
+
+### 1. Bilan de la semaine
+
+### 2. Sujets du jour
+
+## À venir
+
+- `;
+function mdInline(t) {
+  return esc(t)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+}
+function mdRender(src) {
+  const lines = String(src || '').replace(/\r/g, '').split('\n');
+  const out = [];
+  let i = 0;
+  const cells = (l) => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
+  while (i < lines.length) {
+    const l = lines[i];
+    if (!l.trim()) { i++; continue; }
+    let m;
+    if ((m = l.match(/^(#{1,4})\s+(.*)$/))) { const lvl = Math.min(4, m[1].length + 1); out.push(`<h${lvl}>${mdInline(m[2])}</h${lvl}>`); i++; continue; }
+    if (/^\s*\|/.test(l)) {
+      const rows = [];
+      while (i < lines.length && /^\s*\|/.test(lines[i])) { rows.push(lines[i]); i++; }
+      const sepAt = rows.findIndex((r) => /^\s*\|?\s*:?-{2,}/.test(r));
+      const head = sepAt === 1 ? cells(rows[0]) : null;
+      const body = rows.filter((r, k) => k !== sepAt && !(head && k === 0)).map(cells);
+      out.push('<div class="mt-table"><table>' + (head ? '<thead><tr>' + head.map((c) => `<th>${mdInline(c)}</th>`).join('') + '</tr></thead>' : '') +
+        '<tbody>' + body.map((r) => '<tr>' + r.map((c) => `<td>${mdInline(c)}</td>`).join('') + '</tr>').join('') + '</tbody></table></div>');
+      continue;
+    }
+    if (/^\s*([-*]|\d+\.)\s+/.test(l)) {
+      const ordered = /^\s*\d+\.\s+/.test(l), items = [];
+      while (i < lines.length && /^\s*([-*]|\d+\.)\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*([-*]|\d+\.)\s+/, '')); i++; }
+      const tag = ordered ? 'ol' : 'ul';
+      out.push(`<${tag}>` + items.map((x) => `<li>${mdInline(x)}</li>`).join('') + `</${tag}>`);
+      continue;
+    }
+    const para = [];
+    while (i < lines.length && lines[i].trim() && !/^(#{1,4}\s|\s*\||\s*([-*]|\d+\.)\s+)/.test(lines[i])) { para.push(lines[i].trim()); i++; }
+    out.push(`<p>${mdInline(para.join(' '))}</p>`);
+  }
+  return out.join('');
+}
+const meetSorted = () => S.meetings.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || 0) - (a.createdAt || 0));
+function meetingForm(m) {
+  const x = m || { title: 'Réunion du ' + new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }), date: todayKey(), summary: '', docUrl: '', body: MEETING_TEMPLATE };
+  return `<div class="mt-head"><h2>${m ? 'Modifier le compte rendu' : 'Nouvelle réunion'}</h2></div>
+    <form class="mt-form" id="f-meet" data-id="${m ? esc(m.id) : ''}">
+      <div class="row"><input class="in" id="mt-title" required maxlength="120" value="${esc(x.title)}" aria-label="Titre"><input class="in" id="mt-date" type="date" required value="${esc(x.date)}" aria-label="Date"></div>
+      <input class="in" id="mt-summary" maxlength="240" value="${esc(x.summary || '')}" placeholder="En une phrase : la décision ou l'objectif clé" aria-label="Résumé">
+      <input class="in" id="mt-doc" maxlength="300" value="${esc(x.docUrl || '')}" placeholder="Lien vers le doc de travail (facultatif)" aria-label="Lien du doc">
+      <textarea class="in" id="mt-body" aria-label="Compte rendu">${esc(x.body || '')}</textarea>
+      <p class="hint">Mise en forme : ## titre, ### sous-titre, - liste, | tableau |, **gras**, [lien](https://…).</p>
+      <div class="mt-actions"><button class="btn red" type="submit">Enregistrer</button><button class="btn ghost" type="button" data-act="mt-cancel">Annuler</button></div>
+    </form>`;
+}
+function meetingView(m) {
+  const meta = [fmtDay(m.date)];
+  if (m.by && NAMES[m.by]) meta.push('rédigé par ' + esc(NAMES[m.by]));
+  if (m.updatedAt) meta.push('mis à jour ' + relTime(m.updatedAt));
+  const doc = /^https?:\/\//.test(m.docUrl || '') ? ` · <a href="${esc(m.docUrl)}" target="_blank" rel="noopener noreferrer">Doc de travail</a>` : '';
+  return `<div class="mt-head"><div style="min-width:0"><h2>${esc(m.title)}</h2><p class="mt-meta">${meta.join(' · ')}${doc}</p></div>
+      <div class="mt-actions"><button class="btn sm" type="button" data-act="mt-edit" data-id="${esc(m.id)}">Modifier</button><button class="del" type="button" data-act="del" data-c="meetings" data-id="${esc(m.id)}" aria-label="Supprimer">✕</button></div></div>
+    ${m.summary ? `<p class="lead" style="margin-top:18px; font-size:18px; color:var(--fg)">${mdInline(m.summary)}</p>` : ''}
+    <div class="mt-body">${mdRender(m.body)}</div>`;
+}
+FILL.reunions = function () {
+  const list = meetSorted();
+  const sel = S.meetSel ? list.find((m) => m.id === S.meetSel) : list[0];
+  $('#mt-sum').innerHTML = list.length ? `${plural(list.length, 'compte rendu')} · le dernier : <b style="color:var(--fg)">${esc(fmtDay(list[0].date))}</b>` : 'Chaque réunion du dimanche est rédigée et rangée ici.';
+  $('#mt-list').innerHTML = list.length ? list.map((m) => `<a class="mt-item" href="#reunions/${esc(m.id)}" aria-current="${sel && sel.id === m.id ? 'true' : 'false'}"><span class="d">${esc(fmtDay(m.date))}</span><b>${esc(m.title)}</b>${m.summary ? `<span class="s">${esc(m.summary.length > 110 ? m.summary.slice(0, 108) + '…' : m.summary)}</span>` : ''}</a>`).join('') : '';
+  const key = S.meetEdit ? 'edit:' + S.meetEdit : sel ? 'view:' + sel.id + ':' + (sel.updatedAt || sel.createdAt || 0) : 'empty';
+  if (key === S.meetKey && $('#mt-view').childElementCount) return;
+  S.meetKey = key;
+  const pane = $('#mt-view');
+  if (S.meetEdit) {
+    const m = S.meetEdit === 'new' ? null : S.meetings.find((x) => x.id === S.meetEdit);
+    pane.innerHTML = meetingForm(m);
+    bindMeetingForm();
+  } else pane.innerHTML = sel ? meetingView(sel) : emptyBox('Aucun compte rendu pour l\'instant. <b>Nouvelle réunion</b> ouvre la trame habituelle.');
+};
+function bindMeetingForm() {
+  const f = $('#f-meet'); if (!f) return;
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = $('#mt-title').value.trim(), date = $('#mt-date').value;
+    if (!title || !date) return;
+    const id = f.dataset.id || ('r' + date.replace(/-/g, '') + Math.random().toString(36).slice(2, 6));
+    const old = S.meetings.find((x) => x.id === id) || {};
+    const doc = { title, date, summary: $('#mt-summary').value.trim(), docUrl: $('#mt-doc').value.trim(), body: $('#mt-body').value, createdAt: old.createdAt || Date.now(), updatedAt: Date.now(), by: old.by || S.handle || 'duo' };
+    if (await write((db) => db.doc('meetings/' + id).set(doc))) { S.meetEdit = null; S.meetKey = ''; toast('Compte rendu enregistré', title); location.hash = '#reunions/' + id; render(); }
+  });
+}
 
 /* ================= Agence virtuelle 3D : le QG orbital (1er jet, agents en veille) ================= */
 const AGENTS_3D = [
@@ -1485,7 +1659,7 @@ document.addEventListener('click', async (e) => {
     if (ok && done) { victoryUnlocked(v); Orb.pulse(); }
   } else if (act === 'del') {
     if (!el.dataset.armed) { el.dataset.armed = '1'; el.textContent = 'Supprimer'; setTimeout(() => { if (el.isConnected) { delete el.dataset.armed; el.textContent = '✕'; } }, 2600); return; }
-    write((db) => db.doc(el.dataset.c + '/' + id).delete());
+    write((db) => db.doc(el.dataset.c + '/' + id).delete()).then((ok) => { if (ok && el.dataset.c === 'meetings' && S.meetSel === id) location.hash = '#reunions'; });
   } else if (act === 'prod-stage') {
     write((db) => db.doc('products/' + id).update({ stage: el.dataset.s }));
     if (el.dataset.s === 'vente') toast('En vitrine', 'Produit passé en vente.');
@@ -1497,6 +1671,9 @@ document.addEventListener('click', async (e) => {
     ls.set('nobrayn-showdone', ls.get('nobrayn-showdone') === '1' ? '0' : '1'); render();
   } else if (act === 'export') exportData();
   else if (act === 'add-open') openSheet();
+  else if (act === 'mt-new') { S.meetEdit = 'new'; render(); setTimeout(() => { const t = $('#mt-title'); if (t) t.focus(); }, 30); }
+  else if (act === 'mt-edit') { S.meetEdit = id; render(); }
+  else if (act === 'mt-cancel') { S.meetEdit = null; render(); }
   else if (act === 'sheet-close') closeSheet();
   else if (act === 'vision-edit') { $('#ob-vedit').hidden = false; $('#ob-vtext').hidden = true; el.hidden = true; const ta = $('#v-text'); ta.value = S.config.vision || ''; ta.focus(); }
   else if (act === 'vision-cancel') closeVision();
